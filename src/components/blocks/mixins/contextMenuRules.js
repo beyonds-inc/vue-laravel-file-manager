@@ -44,7 +44,7 @@ export default {
          * @returns {boolean|*}
          */
         editRule() {
-            return !this.multiSelect && this.firstItemType === 'file' && this.canEdit(this.selectedItems[0].extension);
+            return !this.multiSelect && this.firstItemType === 'file' && this.canEdit(this.selectedItems[0].extension) && this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
         /**
@@ -76,7 +76,7 @@ export default {
          * @returns {boolean}
          */
         cutRule() {
-            return true;
+            return this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
         /**
@@ -84,7 +84,7 @@ export default {
          * @returns {boolean}
          */
         renameRule() {
-            return !this.multiSelect;
+            return !this.multiSelect && this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
         /**
@@ -92,7 +92,7 @@ export default {
          * @returns {boolean}
          */
         pasteRule() {
-            return !!this.$store.state.fm.clipboard.type;
+            return !!this.$store.state.fm.clipboard.type && this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
         /**
@@ -100,7 +100,7 @@ export default {
          * @returns {boolean}
          */
         zipRule() {
-            return this.selectedDiskDriver === 'local';
+            return this.selectedDiskDriver === 'local' && this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
         /**
@@ -112,7 +112,8 @@ export default {
                 this.selectedDiskDriver === 'local' &&
                 !this.multiSelect &&
                 this.firstItemType === 'file' &&
-                this.isZip(this.selectedItems[0].extension)
+                this.isZip(this.selectedItems[0].extension) &&
+                this.$store.getters['fm/isEverySelectedItemRW']
             );
         },
 
@@ -121,7 +122,7 @@ export default {
          * @returns {boolean}
          */
         deleteRule() {
-            return true;
+            return this.isEverySeletedItemRW && this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
         /**
