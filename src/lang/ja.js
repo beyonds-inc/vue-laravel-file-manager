@@ -62,6 +62,7 @@ const ja = {
       date: '日付',
       folder: 'フォルダ',
       name: '名前',
+      description: '説明',
       size: 'サイズ',
       type: 'タイプ',
     },

@@ -3,9 +3,16 @@
         <table class="table table-sm">
             <thead>
                 <tr>
-                    <th class="w-65" v-on:click="sortBy('name')">
+                    <th class="w-30" v-on:click="sortBy('name')">
                         {{ lang.manager.table.name }}
                         <template v-if="sortSettings.field === 'name'">
+                            <i class="bi bi-sort-down" v-show="sortSettings.direction === 'down'" />
+                            <i class="bi bi-sort-up" v-show="sortSettings.direction === 'up'" />
+                        </template>
+                    </th>
+                    <th class="w-35" v-on:click="sortBy('description')">
+                        {{ lang.manager.table.description }}
+                        <template v-if="sortSettings.field === 'description'">
                             <i class="bi bi-sort-down" v-show="sortSettings.direction === 'down'" />
                             <i class="bi bi-sort-up" v-show="sortSettings.direction === 'up'" />
                         </template>
@@ -54,6 +61,7 @@
                         <i class="bi bi-folder"></i> {{ directory.basename }}
                     </td>
                     <td />
+                    <td />
                     <td>{{ lang.manager.table.folder }}</td>
                     <td>
                         {{ timestampToDate(directory.timestamp) }}
@@ -71,6 +79,7 @@
                         <i class="bi" v-bind:class="extensionToIcon(file.extension)" />
                         {{ file.filename ? file.filename : file.basename }}
                     </td>
+                    <td>{{ file.description }}</td>
                     <td>{{ bytesToHuman(file.size) }}</td>
                     <td>
                         {{ file.extension }}
@@ -149,6 +158,14 @@ export default {
         width: 10%;
     }
 
+    .w-30 {
+        width: 30%;
+    }
+    
+    .w-35 {
+        width: 35%;
+    }
+    
     .w-65 {
         width: 65%;
     }
