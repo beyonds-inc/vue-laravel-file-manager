@@ -40,7 +40,8 @@ import { mapState } from 'vuex';
 import HTTP from './http/axios';
 import EventBus from './emitter';
 // Components
-import NavbarBlock from './components/blocks/NavbarBlock.vue';
+// ナビゲーションバー（ファイル操作ボタン）非表示
+// import NavbarBlock from './components/blocks/NavbarBlock.vue';
 import FolderTree from './components/tree/FolderTree.vue';
 import LeftManager from './components/manager/Manager.vue';
 import RightManager from './components/manager/Manager.vue';
@@ -55,7 +56,8 @@ export default {
     name: 'FileManager',
     mixins: [translate],
     components: {
-        NavbarBlock,
+        // ナビゲーションバー（ファイル操作ボタン）非表示
+        // NavbarBlock,
         FolderTree,
         LeftManager,
         RightManager,
