@@ -80,10 +80,12 @@
                     <td class="description" @mouseenter="showFullDescription(index)" @mouseleave="hideFullDescription()">
                         <p>{{ abbriviatedString(file.description, 20) }}</p>
                         <div class="description-modal-wrapper">
-                            <div v-if="!hasClosed && showFlag && showIndex === index && file.description.length > 0" class="description-modal" :style="{ marginTop: '-' + windowTop + 'px' }">
-                                <button type="button" class="btn-close" aria-label="Close" @click="closeFullDescription()" />
-                                <p class="description-modal-text">{{ file.description }}</p>
-                            </div>
+                            <Transition>
+                                <div v-if="!hasClosed && showFlag && showIndex === index && file.description.length > 0" class="description-modal" :style="{ marginTop: '-' + windowTop + 'px' }">
+                                    <button type="button" class="btn-close" aria-label="Close" @click="closeFullDescription()" />
+                                    <p class="description-modal-text">{{ file.description }}</p>
+                                </div>
+                            </Transition>
                         </div>
                     </td>
                     <td>{{ bytesToHuman(file.size) }}</td>
@@ -283,6 +285,16 @@ export default {
         padding: 0 5px;
         border-radius: 5px;
         font-size: 12px;
+    }
+
+    .v-enter-active,
+    .v-leave-active {
+        transition: opacity 0.3s ease;
+    }
+
+    .v-enter-from,
+    .v-leave-to {
+        opacity: 0;
     }
 }
 </style>
