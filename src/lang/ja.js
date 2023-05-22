@@ -59,7 +59,7 @@ const ja = {
   },
   manager: {
     table: {
-      date: '日付',
+      date: '更新日時',
       folder: 'フォルダ',
       name: '名前',
       description: '説明',
