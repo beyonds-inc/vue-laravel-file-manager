@@ -44,7 +44,8 @@ export default {
          * @returns {boolean|*}
          */
         editRule() {
-            return !this.multiSelect && this.firstItemType === 'file' && this.canEdit(this.selectedItems[0].extension) && this.$store.getters['fm/isEverySelectedItemRW'];
+            // return !this.multiSelect && this.firstItemType === 'file' && this.canEdit(this.selectedItems[0].extension) && this.$store.getters['fm/isEverySelectedItemRW'];
+            return false;
         },
 
         /**
