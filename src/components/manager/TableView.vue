@@ -273,6 +273,7 @@ export default {
         width: 400px;
         padding: 10px;
         white-space: pre-wrap;
+        z-index: 10000;
     }
 
     .description-modal-text {
