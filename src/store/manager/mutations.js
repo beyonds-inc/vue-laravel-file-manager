@@ -5,6 +5,7 @@ export default {
      * @param disk
      */
     setDisk(state, disk) {
+        localStorage.setItem('selectedDisk', disk);
         state.selectedDisk = disk;
     },
 
@@ -24,6 +25,7 @@ export default {
      * @param directory
      */
     setSelectedDirectory(state, directory) {
+        localStorage.setItem('selectedDirectory', directory);
         state.selectedDirectory = directory;
     },
 
