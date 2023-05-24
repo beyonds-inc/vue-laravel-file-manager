@@ -13,6 +13,10 @@ export default {
     initializeApp({ state, commit, getters, dispatch }) {
         GET.initialize().then((response) => {
             if (response.data.result.status === 'success') {
+                // selectedDisk, selectedDirectoryデータを初期化
+                localStorage.removeItem('selectedDisk');
+                localStorage.removeItem('selectedDirectory');
+                
                 commit('settings/initSettings', response.data.config);
                 commit('setDisks', response.data.config.disks);
 
