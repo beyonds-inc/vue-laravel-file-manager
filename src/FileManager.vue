@@ -1,6 +1,7 @@
 <template>
     <div class="fm d-flex flex-column" v-bind:class="{ 'fm-full-screen': fullScreen }">
-        <navbar-block />
+        <!-- ナビゲーションバー（ファイル操作ボタン）非表示 -->
+        <!-- <navbar-block /> -->
         <div class="fm-body d-flex">
             <notification-block />
             <context-menu />
