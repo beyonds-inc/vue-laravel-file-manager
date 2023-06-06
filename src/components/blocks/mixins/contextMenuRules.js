@@ -61,7 +61,9 @@ export default {
          * @returns {boolean}
          */
         downloadRule() {
-            return !this.multiSelect && this.firstItemType === 'file';
+            // return !this.multiSelect && this.firstItemType === 'file';
+            // ファイルを複数選択してもダウンロードできるように変更
+            return this.selectedItems.every((elem) => elem.type === 'file');
         },
 
         /**
