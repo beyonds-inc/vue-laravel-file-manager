@@ -44,7 +44,8 @@ export default {
          * @returns {boolean|*}
          */
         editRule() {
-            return !this.multiSelect && this.firstItemType === 'file' && this.canEdit(this.selectedItems[0].extension);
+            // return !this.multiSelect && this.firstItemType === 'file' && this.canEdit(this.selectedItems[0].extension) && this.$store.getters['fm/isEverySelectedItemRW'];
+            return false;
         },
 
         /**
@@ -60,7 +61,9 @@ export default {
          * @returns {boolean}
          */
         downloadRule() {
-            return !this.multiSelect && this.firstItemType === 'file';
+            // return !this.multiSelect && this.firstItemType === 'file';
+            // ファイルを複数選択してもダウンロードできるように変更
+            return this.selectedItems.every((elem) => elem.type === 'file');
         },
 
         /**
@@ -68,7 +71,8 @@ export default {
          * @returns {boolean}
          */
         copyRule() {
-            return true;
+            // return true;
+            return false;
         },
 
         /**
@@ -76,7 +80,8 @@ export default {
          * @returns {boolean}
          */
         cutRule() {
-            return true;
+            // return this.$store.getters['fm/isEverySelectedItemRW'];
+            return false;
         },
 
         /**
@@ -84,7 +89,8 @@ export default {
          * @returns {boolean}
          */
         renameRule() {
-            return !this.multiSelect;
+            // return !this.multiSelect && this.$store.getters['fm/isEverySelectedItemRW'];
+            return false;
         },
 
         /**
@@ -92,7 +98,8 @@ export default {
          * @returns {boolean}
          */
         pasteRule() {
-            return !!this.$store.state.fm.clipboard.type;
+            // return !!this.$store.state.fm.clipboard.type && this.$store.getters['fm/isEverySelectedItemRW'];
+            return false;
         },
 
         /**
@@ -100,7 +107,8 @@ export default {
          * @returns {boolean}
          */
         zipRule() {
-            return this.selectedDiskDriver === 'local';
+            // return this.selectedDiskDriver === 'local' && this.$store.getters['fm/isEverySelectedItemRW'];
+            return false;
         },
 
         /**
@@ -108,12 +116,14 @@ export default {
          * @returns {boolean}
          */
         unzipRule() {
-            return (
-                this.selectedDiskDriver === 'local' &&
-                !this.multiSelect &&
-                this.firstItemType === 'file' &&
-                this.isZip(this.selectedItems[0].extension)
-            );
+            // return (
+            //     this.selectedDiskDriver === 'local' &&
+            //     !this.multiSelect &&
+            //     this.firstItemType === 'file' &&
+            //     this.isZip(this.selectedItems[0].extension) &&
+            //     this.$store.getters['fm/isEverySelectedItemRW']
+            // );
+            return false;
         },
 
         /**
@@ -121,7 +131,7 @@ export default {
          * @returns {boolean}
          */
         deleteRule() {
-            return true;
+            return this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
         /**
@@ -129,7 +139,8 @@ export default {
          * @returns {boolean}
          */
         propertiesRule() {
-            return !this.multiSelect;
+            // return !this.multiSelect;
+            return false;
         },
     },
 };

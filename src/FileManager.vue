@@ -1,6 +1,7 @@
 <template>
     <div class="fm d-flex flex-column" v-bind:class="{ 'fm-full-screen': fullScreen }">
-        <navbar-block />
+        <!-- ナビゲーションバー（ファイル操作ボタン）非表示 -->
+        <!-- <navbar-block /> -->
         <div class="fm-body d-flex">
             <notification-block />
             <context-menu />
@@ -40,7 +41,8 @@ import { mapState } from 'vuex';
 import HTTP from './http/axios';
 import EventBus from './emitter';
 // Components
-import NavbarBlock from './components/blocks/NavbarBlock.vue';
+// ナビゲーションバー（ファイル操作ボタン）非表示
+// import NavbarBlock from './components/blocks/NavbarBlock.vue';
 import FolderTree from './components/tree/FolderTree.vue';
 import LeftManager from './components/manager/Manager.vue';
 import RightManager from './components/manager/Manager.vue';
@@ -55,7 +57,8 @@ export default {
     name: 'FileManager',
     mixins: [translate],
     components: {
-        NavbarBlock,
+        // ナビゲーションバー（ファイル操作ボタン）非表示
+        // NavbarBlock,
         FolderTree,
         LeftManager,
         RightManager,
@@ -71,7 +74,9 @@ export default {
         settings: {
             type: Object,
             default() {
-                return {};
+                return {
+                    lang: 'ja',
+                };
             },
         },
     },

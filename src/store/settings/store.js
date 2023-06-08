@@ -20,6 +20,7 @@ import pt_BR from '../../lang/pt_BR';
 import zh_TW from '../../lang/zh_TW';
 import pl from '../../lang/pl';
 import hu from '../../lang/hu';
+import ja from '../../lang/ja';
 
 export default {
     namespaced: true,
@@ -46,7 +47,7 @@ export default {
             windowsConfig: null,
 
             // App language
-            lang: null,
+            lang: ja,
 
             // Translations (/src/lang)
             translations: {
@@ -67,6 +68,7 @@ export default {
                 'zh-TW': Object.freeze(zh_TW),
                 pl: Object.freeze(pl),
                 hu: Object.freeze(hu),
+                ja: Object.freeze(ja),
             },
 
             // show or hide hidden files

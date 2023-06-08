@@ -82,26 +82,28 @@ export default {
          * Download file
          */
         downloadAction() {
-            const tempLink = document.createElement('a');
-            tempLink.style.display = 'none';
-            tempLink.setAttribute('download', this.selectedItems[0].basename);
-
-            // download file with authorization
-            if (this.$store.getters['fm/settings/authHeader']) {
-                HTTP.download(this.selectedDisk, this.selectedItems[0].path).then((response) => {
-                    tempLink.href = window.URL.createObjectURL(new Blob([response.data]));
+            this.selectedItems.forEach(selectedItem => {
+                const tempLink = document.createElement('a');
+                tempLink.style.display = 'none';
+                tempLink.setAttribute('download', selectedItem.basename);
+    
+                // download file with authorization
+                if (this.$store.getters['fm/settings/authHeader']) {
+                    HTTP.download(this.selectedDisk, selectedItem.path).then((response) => {
+                        tempLink.href = window.URL.createObjectURL(new Blob([response.data]));
+                        document.body.appendChild(tempLink);
+                        tempLink.click();
+                        document.body.removeChild(tempLink);
+                    });
+                } else {
+                    tempLink.href = `${this.$store.getters['fm/settings/baseUrl']}download?disk=${
+                        this.selectedDisk
+                    }&path=${encodeURIComponent(selectedItem.path)}`;
                     document.body.appendChild(tempLink);
                     tempLink.click();
                     document.body.removeChild(tempLink);
-                });
-            } else {
-                tempLink.href = `${this.$store.getters['fm/settings/baseUrl']}download?disk=${
-                    this.selectedDisk
-                }&path=${encodeURIComponent(this.selectedItems[0].path)}`;
-                document.body.appendChild(tempLink);
-                tempLink.click();
-                document.body.removeChild(tempLink);
-            }
+                }
+            });
         },
 
         /**

@@ -44,4 +44,14 @@ export default {
     inactiveManager(state) {
         return state.activeManager === 'left' ? 'right' : 'left';
     },
+
+    /**
+     * 選択ファイルのRW権限(acl値)
+     * @param state
+     * @param getters
+     * @returns {boolean}
+     */
+    isEverySelectedItemRW(state, getters) {
+        return getters[`${state.activeManager}/selectedList`].every(item => item.acl === 2);
+    },
 };
