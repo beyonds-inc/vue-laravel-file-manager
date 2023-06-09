@@ -79,11 +79,11 @@
                     </td>
                     <td class="description" @mouseenter="showFullDescription(index)" @mouseleave="hideFullDescription()">
                         <p>{{ abbriviatedString(file.description, 20) }}</p>
-                        <div class="description-modal-wrapper">
+                        <div class="description-popup-wrapper">
                             <Transition>
-                                <div v-if="!hasClosed && showFlag && showIndex === index && file.description.length > 0" class="description-modal" :style="{ marginTop: '-' + windowTop + 'px' }">
+                                <div v-if="!hasClosed && showFlag && showIndex === index && file.description.length > 0" class="description-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
                                     <button type="button" class="btn-close" aria-label="Close" @click="closeFullDescription()" />
-                                    <p class="description-modal-text">{{ file.description }}</p>
+                                    <p class="description-popup-text">{{ file.description }}</p>
                                 </div>
                             </Transition>
                         </div>
@@ -259,14 +259,14 @@ export default {
         position: relative;
     }
 
-    .description-modal-wrapper {
+    .description-popup-wrapper {
         width: 400px;
         position: absolute;
         top: 0;
         left: 0;
     }
 
-    .description-modal {
+    .description-popup {
         position: fixed;
         background-color: #fff;
         border: 1px solid #ccc;
@@ -276,7 +276,7 @@ export default {
         z-index: 10000;
     }
 
-    .description-modal-text {
+    .description-popup-text {
         margin-top: 12px;
     }
 
