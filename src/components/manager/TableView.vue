@@ -72,17 +72,25 @@
                     v-on:contextmenu.prevent="contextMenu(file, $event)"
                     style="position: relative;"
                 >
-                    <td class="fm-content-item unselectable" v-bind:class="acl && file.acl === 0 ? 'text-hidden' : ''">
-                        <i class="bi" v-bind:class="extensionToIcon(file.extension)" />
+                    <td class="fm-content-item unselectable" v-bind:class="acl && file.acl === 0 ? 'text-hidden' : ''" @mouseleave="hidePopup();">
+                        <i class="bi" v-bind:class="extensionToIcon(file.extension)" @mouseenter="showImagePopup(index); setImgSrc(file);" />
                         {{ file.filename ? abbriviatedString(file.filename, 15) : abbriviatedString(file.basename, 15) }}
                         <span v-if="isFileNew(file.timestamp)" class="new-indicator">NEW</span>
+                        <div class="image-popup-wrapper">
+                            <Transition>
+                                <div v-if="!hasClosed && showImageFlag && showIndex === index && imageExtensions.includes(file.extension)" class="image-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
+                                    <button type="button" class="btn-close" aria-label="Close" @click="closePopup()" />
+                                    <img :src="imgSrc" />
+                                </div>
+                            </Transition>
+                        </div>
                     </td>
-                    <td class="description" @mouseenter="showFullDescription(index)" @mouseleave="hideFullDescription()">
+                    <td class="description" @mouseenter="showDescriptionPopup(index)" @mouseleave="hidePopup()">
                         <p>{{ abbriviatedString(file.description, 20) }}</p>
                         <div class="description-popup-wrapper">
                             <Transition>
-                                <div v-if="!hasClosed && showFlag && showIndex === index && file.description.length > 0" class="description-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
-                                    <button type="button" class="btn-close" aria-label="Close" @click="closeFullDescription()" />
+                                <div v-if="!hasClosed && showDescriptionFlag && showIndex === index && file.description.length > 0" class="description-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
+                                    <button type="button" class="btn-close" aria-label="Close" @click="closePopup()" />
                                     <p class="description-popup-text">{{ file.description }}</p>
                                 </div>
                             </Transition>
@@ -114,10 +122,13 @@ export default {
     },
     data() {
         return {
-            showFlag: false,
+            showDescriptionFlag: false,
+            showImageFlag: false,
             hasClosed: false,
             showIndex: null,
             windowTop: null,
+            imgSrc: null,
+            timeout: null,
         };
     },
     computed: {
@@ -128,8 +139,21 @@ export default {
         sortSettings() {
             return this.$store.state.fm[this.manager].sort;
         },
+        imageExtensions() {
+            return this.$store.state.fm.settings.imageExtensions;
+        },
+        selectedDisk() {
+            return this.$store.getters['fm/selectedDisk'];
+        },
     },
     methods: {
+        /**
+         * 現在hoverしているファイルのsourceを取得する。
+         * @param file
+         */
+        setImgSrc(file) {
+            this.imgSrc = `${this.$store.getters['fm/settings/baseUrl']}preview?disk=${this.selectedDisk}&path=${encodeURIComponent(file.path)}&v=${file.timestamp}`;
+        },
         /**
          * Sort by field
          * @param field
@@ -153,30 +177,45 @@ export default {
          * ファイル説明全文を表示する。
          * @param {number} index
          */
-        showFullDescription(index) {
+        showDescriptionPopup(index) {
             this.showIndex = index;
-            setTimeout(() => {
+            this.timeout = setTimeout(() => {
                 if (this.showIndex === index) {
-                    this.showFlag = true;
+                    this.showDescriptionFlag = true;
                 }
             }, 1000);
         },
 
         /**
-         * ファイル説明を隠す。
+         * 画像のプレビューを表示する。
+         * @param {number} index
+         */
+        showImagePopup(index) {
+            this.showIndex = index;
+            this.timeout = setTimeout(() => {
+                if (this.showIndex === index) {
+                    this.showImageFlag = true;
+                }
+            }, 1000);
+        },
+
+        /**
+         * Popupを隠す。
          * 
          */
-        hideFullDescription() {
-            this.showFlag = false;
+        hidePopup() {
+            clearTimeout(this.timeout);
+            this.showDescriptionFlag = false;
+            this.showImageFlag = false;
             this.showIndex = null;
             this.hasClosed = false;
         },
 
         /**
-         * ファイル説明を閉じる。
+         * Popupを閉じる。
          * 
          */
-        closeFullDescription() {
+        closePopup() {
             this.hasClosed = true;
         },
 
@@ -259,14 +298,19 @@ export default {
         position: relative;
     }
 
-    .description-popup-wrapper {
+    .description-popup-wrapper, .image-popup-wrapper {
         width: 400px;
         position: absolute;
         top: 0;
         left: 0;
     }
 
-    .description-popup {
+    .image-popup-wrapper img {
+        max-width: 100%;
+        max-height: 400px;
+    }
+
+    .description-popup, .image-popup {
         position: fixed;
         background-color: #fff;
         border: 1px solid #ccc;
