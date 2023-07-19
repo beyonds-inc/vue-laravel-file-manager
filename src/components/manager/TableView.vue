@@ -72,15 +72,24 @@
                     v-on:contextmenu.prevent="contextMenu(file, $event)"
                     style="position: relative;"
                 >
-                    <td class="fm-content-item unselectable" v-bind:class="acl && file.acl === 0 ? 'text-hidden' : ''" @mouseleave="hidePopup();">
-                        <i class="bi" v-bind:class="extensionToIcon(file.extension)" @mouseenter="showImagePopup(index); setImgSrc(file);" />
-                        {{ file.filename ? abbriviatedString(file.filename, 15) : abbriviatedString(file.basename, 15) }}
+                    <td class="fm-content-item unselectable" v-bind:class="acl && file.acl === 0 ? 'text-hidden' : ''" @mouseleave="hidePopup()">
+                        <i class="bi icon" v-bind:class="extensionToIcon(file.extension)" @mouseenter="showImagePopup(index); setImgSrc(file);" />
+                        <span class="filename" @mouseenter="showTitlePopup(index)" >{{ file.filename ? abbriviatedString(file.filename, 15) : abbriviatedString(file.basename, 15) }}</span>
                         <span v-if="isFileNew(file.timestamp)" class="new-indicator">NEW</span>
                         <div class="image-popup-wrapper">
                             <Transition>
                                 <div v-if="!hasClosed && showImageFlag && showIndex === index && imageExtensions.includes(file.extension)" class="image-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
                                     <button type="button" class="btn-close" aria-label="Close" @click="closePopup()" />
                                     <img :src="imgSrc" />
+                                </div>
+                            </Transition>
+                        </div>
+                        <div class="title-popup-wrapper">
+                            <Transition>
+                                <div v-if="!hasClosed && showTitleFlag && showIndex === index && !showImageFlag" class="title-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
+                                    <button type="button" class="btn-close" aria-label="Close" @click="closePopup()" />
+                                    <h3 class="title-popup-basename">{{ file.basename }}</h3>
+                                    <p class="title-popup-description">{{ file.description }}</p>
                                 </div>
                             </Transition>
                         </div>
@@ -91,7 +100,8 @@
                             <Transition>
                                 <div v-if="!hasClosed && showDescriptionFlag && showIndex === index && file.description.length > 0" class="description-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
                                     <button type="button" class="btn-close" aria-label="Close" @click="closePopup()" />
-                                    <p class="description-popup-text">{{ file.description }}</p>
+                                    <h3 class="description-popup-basename">{{ file.basename }}</h3>
+                                    <p class="description-popup-description">{{ file.description }}</p>
                                 </div>
                             </Transition>
                         </div>
@@ -122,6 +132,7 @@ export default {
     },
     data() {
         return {
+            showTitleFlag: false,
             showDescriptionFlag: false,
             showImageFlag: false,
             hasClosed: false,
@@ -174,16 +185,31 @@ export default {
         },
 
         /**
-         * ファイル説明全文を表示する。
+         * 説明欄にカーソルを当てた時、ファイルのフルネーム、説明全文を表示する。
+         * @param {number} index
+         */
+        showTitlePopup(index) {
+            clearTimeout(this.timeout);
+            this.showIndex = index;
+            this.timeout = setTimeout(() => {
+                if (this.showIndex === index) {
+                    this.showTitleFlag = true;
+                }
+            }, 500);
+        },
+
+        /**
+         * 説明欄にカーソルを当てた時、ファイルのフルネーム、説明全文を表示する。
          * @param {number} index
          */
         showDescriptionPopup(index) {
+            clearTimeout(this.timeout);
             this.showIndex = index;
             this.timeout = setTimeout(() => {
                 if (this.showIndex === index) {
                     this.showDescriptionFlag = true;
                 }
-            }, 1000);
+            }, 500);
         },
 
         /**
@@ -191,12 +217,13 @@ export default {
          * @param {number} index
          */
         showImagePopup(index) {
+            clearTimeout(this.timeout);
             this.showIndex = index;
             this.timeout = setTimeout(() => {
                 if (this.showIndex === index) {
                     this.showImageFlag = true;
                 }
-            }, 1000);
+            }, 500);
         },
 
         /**
@@ -205,6 +232,7 @@ export default {
          */
         hidePopup() {
             clearTimeout(this.timeout);
+            this.showTitleFlag = false;
             this.showDescriptionFlag = false;
             this.showImageFlag = false;
             this.showIndex = null;
@@ -298,7 +326,16 @@ export default {
         position: relative;
     }
 
-    .description-popup-wrapper, .image-popup-wrapper {
+    .icon {
+        display: inline-block;
+    }
+
+    .filename {
+        margin-left: 0.125em;
+        display: inline-block;
+    }
+    
+    .title-popup-wrapper, .description-popup-wrapper, .image-popup-wrapper {
         width: 400px;
         position: absolute;
         top: 0;
@@ -310,7 +347,7 @@ export default {
         max-height: 400px;
     }
 
-    .description-popup, .image-popup {
+    .title-popup, .description-popup, .image-popup {
         position: fixed;
         background-color: #fff;
         border: 1px solid #ccc;
@@ -320,7 +357,13 @@ export default {
         z-index: 10000;
     }
 
-    .description-popup-text {
+    .title-popup-basename, .description-popup-basename {
+        font-weight: bold;
+        font-size: 18px;
+        margin-top: 12px;
+    }
+
+    .title-popup-description, .description-popup-description {
         margin-top: 12px;
     }
 
