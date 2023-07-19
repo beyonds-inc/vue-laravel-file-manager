@@ -326,6 +326,11 @@ export default {
         position: relative;
     }
 
+    .btn-close {
+        display: block;
+        margin-bottom: 8px;
+    }
+
     .icon {
         display: inline-block;
     }
