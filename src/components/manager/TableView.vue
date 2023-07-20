@@ -72,11 +72,15 @@
                     v-on:click="selectItem('files', file.path, $event)"
                     v-on:touchstart="selectItem('files', file.path, $event)"
                     v-on:dblclick="selectAction(file.path, file.extension)"
-                    v-on:touchend="selectAction(file.path, file.extension)"
                     v-on:contextmenu.prevent="contextMenu(file, $event)"
                     style="position: relative;"
                 >
-                    <td class="fm-content-item unselectable" v-bind:class="acl && file.acl === 0 ? 'text-hidden' : ''" @mouseleave="hidePopup()">
+                    <td
+                        class="fm-content-item unselectable"
+                        v-bind:class="acl && file.acl === 0 ? 'text-hidden' : ''"
+                        v-on:mouseleave="hidePopup()"
+                        v-on:touchend="selectAction(file.path, file.extension)"
+                    >
                         <i class="bi icon" v-bind:class="extensionToIcon(file.extension)" @mouseenter="showImagePopup(index); setImgSrc(file);" />
                         <span class="filename" @mouseenter="showTitlePopup(index)" >{{ file.filename ? abbriviatedString(file.filename, 15) : abbriviatedString(file.basename, 15) }}</span>
                         <span v-if="isFileNew(file.timestamp)" class="new-indicator">NEW</span>
