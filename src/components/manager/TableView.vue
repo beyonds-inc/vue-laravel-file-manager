@@ -47,12 +47,14 @@
                     v-bind:key="`d-${index}`"
                     v-bind:class="{ 'table-info': checkSelect('directories', directory.path) }"
                     v-on:click="selectItem('directories', directory.path, $event)"
+                    v-on:touchstart="selectItem('directories', directory.path, $event)"
                     v-on:contextmenu.prevent="contextMenu(directory, $event)"
                 >
                     <td
                         class="fm-content-item unselectable"
                         v-bind:class="acl && directory.acl === 0 ? 'text-hidden' : ''"
                         v-on:dblclick="selectDirectory(directory.path)"
+                        v-on:touchend="selectDirectory(directory.path)"
                     >
                         <i class="bi bi-folder"></i> {{ directory.basename }}
                     </td>
@@ -68,7 +70,9 @@
                     v-bind:key="`f-${index}`"
                     v-bind:class="{ 'table-info': checkSelect('files', file.path) }"
                     v-on:click="selectItem('files', file.path, $event)"
+                    v-on:touchstart="selectItem('files', file.path, $event)"
                     v-on:dblclick="selectAction(file.path, file.extension)"
+                    v-on:touchend="selectAction(file.path, file.extension)"
                     v-on:contextmenu.prevent="contextMenu(file, $event)"
                     style="position: relative;"
                 >
