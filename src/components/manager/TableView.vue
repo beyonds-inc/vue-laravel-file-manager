@@ -72,18 +72,36 @@
                     v-on:contextmenu.prevent="contextMenu(file, $event)"
                     style="position: relative;"
                 >
-                    <td class="fm-content-item unselectable" v-bind:class="acl && file.acl === 0 ? 'text-hidden' : ''">
-                        <i class="bi" v-bind:class="extensionToIcon(file.extension)" />
-                        {{ file.filename ? abbriviatedString(file.filename, 15) : abbriviatedString(file.basename, 15) }}
+                    <td class="fm-content-item unselectable" v-bind:class="acl && file.acl === 0 ? 'text-hidden' : ''" @mouseleave="hidePopup()">
+                        <i class="bi icon" v-bind:class="extensionToIcon(file.extension)" @mouseenter="showImagePopup(index); setImgSrc(file);" />
+                        <span class="filename" @mouseenter="showTitlePopup(index)" >{{ file.filename ? abbriviatedString(file.filename, 15) : abbriviatedString(file.basename, 15) }}</span>
                         <span v-if="isFileNew(file.timestamp)" class="new-indicator">NEW</span>
-                    </td>
-                    <td class="description" @mouseenter="showFullDescription(index)" @mouseleave="hideFullDescription()">
-                        <p>{{ abbriviatedString(file.description, 20) }}</p>
-                        <div class="description-modal-wrapper">
+                        <div class="image-popup-wrapper">
                             <Transition>
-                                <div v-if="!hasClosed && showFlag && showIndex === index && file.description.length > 0" class="description-modal" :style="{ marginTop: '-' + windowTop + 'px' }">
-                                    <button type="button" class="btn-close" aria-label="Close" @click="closeFullDescription()" />
-                                    <p class="description-modal-text">{{ file.description }}</p>
+                                <div v-if="!hasClosed && showImageFlag && showIndex === index && imageExtensions.includes(file.extension)" class="image-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
+                                    <button type="button" class="btn-close" aria-label="Close" @click="closePopup()" />
+                                    <img :src="imgSrc" />
+                                </div>
+                            </Transition>
+                        </div>
+                        <div class="title-popup-wrapper">
+                            <Transition>
+                                <div v-if="!hasClosed && showTitleFlag && showIndex === index && !showImageFlag" class="title-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
+                                    <button type="button" class="btn-close" aria-label="Close" @click="closePopup()" />
+                                    <h3 class="title-popup-basename">{{ file.basename }}</h3>
+                                    <p class="title-popup-description">{{ file.description }}</p>
+                                </div>
+                            </Transition>
+                        </div>
+                    </td>
+                    <td class="description" @mouseenter="showDescriptionPopup(index)" @mouseleave="hidePopup()">
+                        <p>{{ abbriviatedString(file.description, 20) }}</p>
+                        <div class="description-popup-wrapper">
+                            <Transition>
+                                <div v-if="!hasClosed && showDescriptionFlag && showIndex === index && file.description.length > 0" class="description-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
+                                    <button type="button" class="btn-close" aria-label="Close" @click="closePopup()" />
+                                    <h3 class="description-popup-basename">{{ file.basename }}</h3>
+                                    <p class="description-popup-description">{{ file.description }}</p>
                                 </div>
                             </Transition>
                         </div>
@@ -114,10 +132,14 @@ export default {
     },
     data() {
         return {
-            showFlag: false,
+            showTitleFlag: false,
+            showDescriptionFlag: false,
+            showImageFlag: false,
             hasClosed: false,
             showIndex: null,
             windowTop: null,
+            imgSrc: null,
+            timeout: null,
         };
     },
     computed: {
@@ -128,8 +150,21 @@ export default {
         sortSettings() {
             return this.$store.state.fm[this.manager].sort;
         },
+        imageExtensions() {
+            return this.$store.state.fm.settings.imageExtensions;
+        },
+        selectedDisk() {
+            return this.$store.getters['fm/selectedDisk'];
+        },
     },
     methods: {
+        /**
+         * 現在hoverしているファイルのsourceを取得する。
+         * @param file
+         */
+        setImgSrc(file) {
+            this.imgSrc = `${this.$store.getters['fm/settings/baseUrl']}preview?disk=${this.selectedDisk}&path=${encodeURIComponent(file.path)}&v=${file.timestamp}`;
+        },
         /**
          * Sort by field
          * @param field
@@ -150,33 +185,65 @@ export default {
         },
 
         /**
-         * ファイル説明全文を表示する。
+         * 説明欄にカーソルを当てた時、ファイルのフルネーム、説明全文を表示する。
          * @param {number} index
          */
-        showFullDescription(index) {
+        showTitlePopup(index) {
+            clearTimeout(this.timeout);
             this.showIndex = index;
-            setTimeout(() => {
+            this.timeout = setTimeout(() => {
                 if (this.showIndex === index) {
-                    this.showFlag = true;
+                    this.showTitleFlag = true;
                 }
-            }, 1000);
+            }, 500);
         },
 
         /**
-         * ファイル説明を隠す。
+         * 説明欄にカーソルを当てた時、ファイルのフルネーム、説明全文を表示する。
+         * @param {number} index
+         */
+        showDescriptionPopup(index) {
+            clearTimeout(this.timeout);
+            this.showIndex = index;
+            this.timeout = setTimeout(() => {
+                if (this.showIndex === index) {
+                    this.showDescriptionFlag = true;
+                }
+            }, 500);
+        },
+
+        /**
+         * 画像のプレビューを表示する。
+         * @param {number} index
+         */
+        showImagePopup(index) {
+            clearTimeout(this.timeout);
+            this.showIndex = index;
+            this.timeout = setTimeout(() => {
+                if (this.showIndex === index) {
+                    this.showImageFlag = true;
+                }
+            }, 500);
+        },
+
+        /**
+         * Popupを隠す。
          * 
          */
-        hideFullDescription() {
-            this.showFlag = false;
+        hidePopup() {
+            clearTimeout(this.timeout);
+            this.showTitleFlag = false;
+            this.showDescriptionFlag = false;
+            this.showImageFlag = false;
             this.showIndex = null;
             this.hasClosed = false;
         },
 
         /**
-         * ファイル説明を閉じる。
+         * Popupを閉じる。
          * 
          */
-        closeFullDescription() {
+        closePopup() {
             this.hasClosed = true;
         },
 
@@ -259,14 +326,33 @@ export default {
         position: relative;
     }
 
-    .description-modal-wrapper {
+    .btn-close {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .icon {
+        display: inline-block;
+    }
+
+    .filename {
+        margin-left: 0.125em;
+        display: inline-block;
+    }
+    
+    .title-popup-wrapper, .description-popup-wrapper, .image-popup-wrapper {
         width: 400px;
         position: absolute;
         top: 0;
         left: 0;
     }
 
-    .description-modal {
+    .image-popup-wrapper img {
+        max-width: 100%;
+        max-height: 400px;
+    }
+
+    .title-popup, .description-popup, .image-popup {
         position: fixed;
         background-color: #fff;
         border: 1px solid #ccc;
@@ -276,7 +362,13 @@ export default {
         z-index: 10000;
     }
 
-    .description-modal-text {
+    .title-popup-basename, .description-popup-basename {
+        font-weight: bold;
+        font-size: 18px;
+        margin-top: 12px;
+    }
+
+    .title-popup-description, .description-popup-description {
         margin-top: 12px;
     }
 
