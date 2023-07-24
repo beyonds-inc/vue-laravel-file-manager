@@ -9,8 +9,8 @@
                 <left-manager class="col" manager="left" />
             </template>
             <template v-else-if="windowsConfig === 2">
-                <folder-tree class="col-4 col-md-3" />
-                <left-manager class="col-8 col-md-9" manager="left" />
+                <folder-tree class="col-4 col-md-3 folder-tree-container" />
+                <left-manager class="col-8 col-md-9 left-manager-container" manager="left" />
             </template>
             <template v-else-if="windowsConfig === 3">
                 <left-manager
@@ -313,5 +313,16 @@ export default {
     width: 100%;
     height: 100%;
     padding-bottom: 0;
+}
+
+@media (max-width: 575.98px) {
+    .folder-tree-container {
+        display: none;
+    }
+    .left-manager-container {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 }
 </style>

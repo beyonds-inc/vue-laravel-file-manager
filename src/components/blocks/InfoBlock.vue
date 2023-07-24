@@ -11,7 +11,7 @@
                 {{ `${lang.info.size} ${filesSize}` }}
             </span>
         </div>
-        <div class="col-4">
+        <div class="col-4 progress-container">
             <!-- Progress Bar -->
             <div class="progress" v-show="progressBar">
                 <div
@@ -165,6 +165,12 @@ export default {
     .text-right > span {
         padding-left: 0.5rem;
         cursor: pointer;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .progress-container {
+        display: none;        
     }
 }
 </style>

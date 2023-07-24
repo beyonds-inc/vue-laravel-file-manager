@@ -3,31 +3,31 @@
         <table class="table table-sm">
             <thead>
                 <tr>
-                    <th class="w-30" v-on:click="sortBy('name')">
+                    <th class="table-name w-30" v-on:click="sortBy('name')">
                         {{ lang.manager.table.name }}
                         <template v-if="sortSettings.field === 'name'">
                             <i class="bi bi-sort-down" v-show="sortSettings.direction === 'down'" />
                             <i class="bi bi-sort-up" v-show="sortSettings.direction === 'up'" />
                         </template>
                     </th>
-                    <th class="w-35">
+                    <th class="table-description w-35">
                         {{ lang.manager.table.description }}
                     </th>
-                    <th class="w-10" v-on:click="sortBy('size')">
+                    <th class="table-size w-10" v-on:click="sortBy('size')">
                         {{ lang.manager.table.size }}
                         <template v-if="sortSettings.field === 'size'">
                             <i class="bi bi-sort-down" v-show="sortSettings.direction === 'down'" />
                             <i class="bi bi-sort-up" v-show="sortSettings.direction === 'up'" />
                         </template>
                     </th>
-                    <th class="w-10" v-on:click="sortBy('type')">
+                    <th class="table-type w-10" v-on:click="sortBy('type')">
                         {{ lang.manager.table.type }}
                         <template v-if="sortSettings.field === 'type'">
                             <i class="bi bi-sort-down" v-show="sortSettings.direction === 'down'" />
                             <i class="bi bi-sort-up" v-show="sortSettings.direction === 'up'" />
                         </template>
                     </th>
-                    <th class="w-auto" v-on:click="sortBy('date')">
+                    <th class="table-date w-auto" v-on:click="sortBy('date')">
                         {{ lang.manager.table.date }}
                         <template v-if="sortSettings.field === 'date'">
                             <i class="bi bi-sort-down" v-show="sortSettings.direction === 'down'" />
@@ -397,6 +397,15 @@ export default {
     .v-enter-from,
     .v-leave-to {
         opacity: 0;
+    }
+    .table-name {
+        min-width: 150px;
+    }
+    .table-description {
+        min-width: 150px;
+    }
+    .table-size {
+        min-width: 70px;
     }
 }
 </style>
