@@ -1,6 +1,6 @@
 <template>
     <div class="fm d-flex flex-column" v-bind:class="{ 'fm-full-screen': fullScreen }">
-        <navbar-block v-if="isClient" />
+        <navbar-block />
         <div class="fm-body d-flex">
             <notification-block />
             <context-menu />
@@ -116,9 +116,6 @@ export default {
             showModal: (state) => state.modal.showModal,
             fullScreen: (state) => state.settings.fullScreen,
         }),
-        isClient() {
-            return this.$store.state.fm.isClient;
-        }
     },
     methods: {
         /**

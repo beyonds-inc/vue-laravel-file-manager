@@ -25,7 +25,4 @@ export default {
 
     // full screen mode
     fullScreen: false,
-
-    // ユーザー権限判定
-    isClient: false,
 };
