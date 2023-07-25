@@ -268,8 +268,7 @@ export default {
         },
     },
     mounted() {
-        window.addEventListener("scroll", this.onScroll);
-        this.$store.commit('fm/setUserRole');
+        window.addEventListener("scroll", this.onScroll)
     },
     beforeDestroy() {
         window.removeEventListener("scroll", this.onScroll)

@@ -92,13 +92,4 @@ export default {
         state.fileCallback = null;
         state.fullScreen = false;
     },
-
-    /**
-     * ユーザー権限判定
-     * laravel側で、urlからclientかmedicalか判定してwindowに登録している
-     * @param state
-     */
-    setUserRole(state) {
-        state.isClient = window.isClient;
-    },
 };
