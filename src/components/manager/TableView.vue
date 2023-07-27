@@ -406,5 +406,8 @@ export default {
     .table-size {
         min-width: 70px;
     }
+    .table-type {
+        min-width: 80px;
+    }
 }
 </style>

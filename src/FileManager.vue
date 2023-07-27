@@ -1,6 +1,6 @@
 <template>
     <div class="fm d-flex flex-column" v-bind:class="{ 'fm-full-screen': fullScreen }">
-        <navbar-block />
+        <navbar-block class="navbar-block" />
         <div class="fm-body d-flex">
             <notification-block />
             <context-menu />
@@ -313,6 +313,9 @@ export default {
 }
 
 @media (max-width: 575.98px) {
+    .navbar-block {
+        display: none !important;
+    }
     .folder-tree-container {
         display: none;
     }
