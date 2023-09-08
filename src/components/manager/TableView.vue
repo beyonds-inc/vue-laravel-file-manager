@@ -3,14 +3,14 @@
         <table class="table table-sm">
             <thead>
                 <tr>
-                    <th class="table-name w-30" v-on:click="sortBy('name')">
+                    <th class="table-name w-40" v-on:click="sortBy('name')">
                         {{ lang.manager.table.name }}
                         <template v-if="sortSettings.field === 'name'">
                             <i class="bi bi-sort-down" v-show="sortSettings.direction === 'down'" />
                             <i class="bi bi-sort-up" v-show="sortSettings.direction === 'up'" />
                         </template>
                     </th>
-                    <th class="table-description w-35">
+                    <th class="table-description w-20">
                         {{ lang.manager.table.description }}
                     </th>
                     <th class="table-size w-10" v-on:click="sortBy('size')">
@@ -82,7 +82,7 @@
                         v-on:touchend="selectAction(file.path, file.extension)"
                     >
                         <i class="bi icon" v-bind:class="extensionToIcon(file.extension)" @mouseenter="showImagePopup(index); setImgSrc(file);" />
-                        <span class="filename" @mouseenter="showTitlePopup(index)" >{{ file.filename ? abbriviatedString(file.filename, 15) : abbriviatedString(file.basename, 15) }}</span>
+                        <span class="filename" @mouseenter="showTitlePopup(index)" >{{ file.filename ?? file.basename }}</span>
                         <span v-if="isFileNew(file.timestamp)" class="new-indicator">NEW</span>
                         <div class="image-popup-wrapper">
                             <Transition>
@@ -103,7 +103,7 @@
                         </div>
                     </td>
                     <td class="description" @mouseenter="showDescriptionPopup(index)" @mouseleave="hidePopup()">
-                        <p>{{ abbriviatedString(file.description, 20) }}</p>
+                        <span>{{ file.description }}</span>
                         <div class="description-popup-wrapper">
                             <Transition>
                                 <div v-if="!hasClosed && showDescriptionFlag && showIndex === index && file.description.length > 0" class="description-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
@@ -277,6 +277,11 @@ export default {
 </script>
 
 <style lang="scss">
+@media (min-width: 768px) {
+    table {
+        table-layout: fixed;
+    }
+}
 .fm-table {
     thead th {
         background: white;
@@ -309,12 +314,20 @@ export default {
         width: 10%;
     }
 
+    .w-20 {
+        width: 20%;
+    }
+
     .w-30 {
         width: 30%;
     }
     
     .w-35 {
         width: 35%;
+    }
+    
+    .w-40 {
+        width: 40%;
     }
     
     .w-65 {
@@ -331,7 +344,11 @@ export default {
     }
 
     .description {
+        max-width: 200px;
         position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .btn-close {
@@ -345,7 +362,6 @@ export default {
 
     .filename {
         margin-left: 0.125em;
-        display: inline-block;
     }
     
     .title-popup-wrapper, .description-popup-wrapper, .image-popup-wrapper {
@@ -386,6 +402,7 @@ export default {
         padding: 0 5px;
         border-radius: 5px;
         font-size: 12px;
+        margin-left: 5px;
     }
 
     .v-enter-active,
