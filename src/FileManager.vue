@@ -1,7 +1,6 @@
 <template>
     <div class="fm d-flex flex-column" v-bind:class="{ 'fm-full-screen': fullScreen }">
-        <!-- ナビゲーションバー（ファイル操作ボタン）非表示 -->
-        <!-- <navbar-block /> -->
+        <navbar-block class="navbar-block" />
         <div class="fm-body d-flex">
             <notification-block />
             <context-menu />
@@ -10,8 +9,8 @@
                 <left-manager class="col" manager="left" />
             </template>
             <template v-else-if="windowsConfig === 2">
-                <folder-tree class="col-4 col-md-3" />
-                <left-manager class="col-8 col-md-9" manager="left" />
+                <folder-tree class="col-4 col-md-3 folder-tree-container" />
+                <left-manager class="col-8 col-md-9 left-manager-container" manager="left" />
             </template>
             <template v-else-if="windowsConfig === 3">
                 <left-manager
@@ -41,8 +40,7 @@ import { mapState } from 'vuex';
 import HTTP from './http/axios';
 import EventBus from './emitter';
 // Components
-// ナビゲーションバー（ファイル操作ボタン）非表示
-// import NavbarBlock from './components/blocks/NavbarBlock.vue';
+import NavbarBlock from './components/blocks/NavbarBlock.vue';
 import FolderTree from './components/tree/FolderTree.vue';
 import LeftManager from './components/manager/Manager.vue';
 import RightManager from './components/manager/Manager.vue';
@@ -57,8 +55,7 @@ export default {
     name: 'FileManager',
     mixins: [translate],
     components: {
-        // ナビゲーションバー（ファイル操作ボタン）非表示
-        // NavbarBlock,
+        NavbarBlock,
         FolderTree,
         LeftManager,
         RightManager,
@@ -313,5 +310,19 @@ export default {
     width: 100%;
     height: 100%;
     padding-bottom: 0;
+}
+
+@media (max-width: 575.98px) {
+    .navbar-block {
+        display: none !important;
+    }
+    .folder-tree-container {
+        display: none;
+    }
+    .left-manager-container {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 }
 </style>

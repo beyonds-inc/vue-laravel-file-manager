@@ -80,8 +80,8 @@ export default {
          * @returns {boolean}
          */
         cutRule() {
-            // return this.$store.getters['fm/isEverySelectedItemRW'];
-            return false;
+            return this.$store.getters['fm/isEverySelectedItemRW'];
+            // return false;
         },
 
         /**
