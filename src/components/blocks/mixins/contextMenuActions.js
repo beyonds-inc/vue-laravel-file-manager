@@ -111,9 +111,9 @@ export default {
          */
         copyUrlAction() {
             var currentUrl = window.location.origin + window.location.pathname +
-                            '?leftDisk=' + this.selectedDisk +
-                            '&leftPath=' + this.selectedItems[0].dirname +
-                            '&baseName=' + this.selectedItems[0].basename;
+                            '?leftDisk=' + encodeURIComponent(this.selectedDisk) +
+                            '&leftPath=' + encodeURIComponent(this.selectedItems[0].dirname) +
+                            '&baseName=' + encodeURIComponent(this.selectedItems[0].basename);
             navigator.clipboard.writeText(currentUrl);
             EventBus.emit('addNotification', {
                 status: 'success',
