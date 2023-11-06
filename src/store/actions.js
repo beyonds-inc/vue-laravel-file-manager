@@ -27,6 +27,7 @@ export default {
                 // paths
                 let leftPath = response.data.config.leftPath;
                 let rightPath = response.data.config.rightPath;
+                let baseName = '';
 
                 // find disk and path settings in the URL
                 if (window.location.search) {
@@ -47,6 +48,10 @@ export default {
                     if (params.get('rightPath')) {
                         rightPath = params.get('rightPath');
                     }
+
+                    if (params.get('baseName')) {
+                        baseName = params.get('baseName');
+                    }
                 }
 
                 commit('left/setDisk', leftDisk);
@@ -55,6 +60,7 @@ export default {
                 if (leftPath) {
                     commit('left/setSelectedDirectory', leftPath);
                     commit('left/addToHistory', leftPath);
+                    commit('left/setSelected', { type: 'files', path: `${leftPath}/${baseName}` });
                 }
 
                 dispatch('getLoadContent', {
