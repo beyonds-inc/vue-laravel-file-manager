@@ -110,8 +110,7 @@ export default {
          * Copy URL of selected item
          */
         copyUrlAction() {
-            const PATH_NAME = '/medical/materials';
-            var currentUrl = window.location.origin + PATH_NAME +
+            var currentUrl = window.location.origin + window.location.pathname.replace('client', 'medical') +
                             '?leftDisk=' + encodeURIComponent(this.selectedDisk) +
                             '&leftPath=' + encodeURIComponent(this.selectedItems[0].dirname) +
                             '&baseName=' + encodeURIComponent(this.selectedItems[0].basename);
