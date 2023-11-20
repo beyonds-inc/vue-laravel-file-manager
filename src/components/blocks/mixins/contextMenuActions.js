@@ -1,5 +1,5 @@
 import HTTP from '../../../http/get';
-
+import EventBus from '../../../emitter';
 /**
  * Context menu actions
  * {name}Action
@@ -103,6 +103,21 @@ export default {
                     tempLink.click();
                     document.body.removeChild(tempLink);
                 }
+            });
+        },
+
+        /**
+         * Copy URL of selected item
+         */
+        copyUrlAction() {
+            var currentUrl = window.location.origin + window.location.pathname.replace('client', 'medical') +
+                            '?leftDisk=' + encodeURIComponent(this.selectedDisk) +
+                            '&leftPath=' + encodeURIComponent(this.selectedItems[0].dirname) +
+                            '&baseName=' + encodeURIComponent(this.selectedItems[0].basename);
+            navigator.clipboard.writeText(currentUrl);
+            EventBus.emit('addNotification', {
+                status: 'success',
+                message: this.lang.notifications.copyUrl,
             });
         },
 

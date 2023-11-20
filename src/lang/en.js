@@ -49,6 +49,7 @@ const en = {
         edit: 'Edit',
         audioPlay: 'Play',
         videoPlay: 'Play',
+        copyUrl: 'Copy URL',
     },
     info: {
         directories: 'Folders:',
@@ -157,6 +158,7 @@ const en = {
     notifications: {
         cutToClipboard: 'Cut to clipboard!',
         copyToClipboard: 'Copied to clipboard!',
+        copyUrl: 'URL copied!',
     },
     response: {
         noConfig: 'Config not found!',

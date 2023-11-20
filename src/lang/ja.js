@@ -49,6 +49,7 @@ const ja = {
     edit: '編集',
     audioPlay: '再生',
     videoPlay: '動画再生',
+    copyUrl: 'URLコピー',
   },
   info: {
     directories: 'フォルダ:',
@@ -158,6 +159,7 @@ const ja = {
   notifications: {
     cutToClipboard: 'クリップボードに切り取りしました！',
     copyToClipboard: 'クリップボードにコピーしました！',
+    copyUrl: 'URLをコピーしました！',
   },
   response: {
     noConfig: '設定が見つかりませんでした！',

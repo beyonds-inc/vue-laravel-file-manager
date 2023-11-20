@@ -67,6 +67,14 @@ export default {
         },
 
         /**
+         * Copy URL - menu item status - show or hide
+         * @returns {boolean}
+         */
+        copyUrlRule() {
+            return !this.multiSelect;
+        },
+
+        /**
          * Copy - menu item status - show or hide
          * @returns {boolean}
          */

@@ -105,6 +105,10 @@ export default {
                         name: 'download',
                         icon: 'bi-download',
                     },
+                    {
+                        name: 'copyUrl',
+                        icon: 'bi-link-45deg',
+                    }
                 ],
                 [
                     {
