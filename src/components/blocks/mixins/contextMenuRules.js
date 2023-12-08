@@ -71,7 +71,7 @@ export default {
          * @returns {boolean}
          */
         copyUrlRule() {
-            return !this.multiSelect;
+            return !this.multiSelect && this.selectedItems[0].type === 'file';
         },
 
         /**
@@ -88,7 +88,7 @@ export default {
          * @returns {boolean}
          */
         cutRule() {
-            return this.$store.getters['fm/isEverySelectedItemRW'];
+            return this.$store.getters['fm/isEverySelectedItemRW'] && this.selectedItems.every((elem) => elem.type === 'file');
             // return false;
         },
 
@@ -139,6 +139,11 @@ export default {
          * @returns {boolean}
          */
         deleteRule() {
+            const isEditor = role === 'editor';
+            // forbid medical users from deleting folders
+            if (!this.selectedItems.every((elem) => elem.type === 'file') && !isEditor) {
+                return false;
+            }
             return this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
