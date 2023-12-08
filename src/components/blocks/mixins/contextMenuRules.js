@@ -139,7 +139,6 @@ export default {
          * @returns {boolean}
          */
         deleteRule() {
-            const isEditor = role === 'editor';
             // forbid medical users from deleting folders
             if (!this.selectedItems.every((elem) => elem.type === 'file') && !isEditor) {
                 return false;

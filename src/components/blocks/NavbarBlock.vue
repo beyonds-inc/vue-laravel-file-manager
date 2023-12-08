@@ -35,7 +35,7 @@ export default {
     mixins: [translate],
     data() {
         return {
-            isEditor: role === 'editor',
+            isEditor: isEditor,
         };
     },
     computed: {
