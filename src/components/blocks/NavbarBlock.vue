@@ -54,11 +54,6 @@ export default {
         clipboardType() {
             return this.$store.state.fm.clipboard.type;
         },
-        
-        /**
-         * Whether role is editor
-         * 
-         */
     },
     methods: {
         /**
