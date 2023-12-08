@@ -4,7 +4,7 @@
             <div class="col-auto">
                 <div class="btn-group" role="group">
                     <button
-                        v-if="role === 'editor'"
+                        v-if="isEditor"
                         type="button"
                         class="btn btn-secondary"
                         v-on:click="showModal('NewFolderModal')"
@@ -35,7 +35,7 @@ export default {
     mixins: [translate],
     data() {
         return {
-            role: role, // role is defined in blade template
+            isEditor: role === 'editor',
         };
     },
     computed: {
