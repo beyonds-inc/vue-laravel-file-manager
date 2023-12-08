@@ -138,9 +138,8 @@ export default {
             }
 
             // create event
-            if (type === 'files') {
-                EventBus.emit('contextMenu', event);
-            }
+            // @TODO: fix next errors; copying wrong url, not being able to paste folder, preventing copying url of folder
+            EventBus.emit('contextMenu', event);
         },
 
         /**

@@ -4,6 +4,15 @@
             <div class="col-auto">
                 <div class="btn-group" role="group">
                     <button
+                        v-if="role === 'editor'"
+                        type="button"
+                        class="btn btn-secondary"
+                        v-on:click="showModal('NewFolderModal')"
+                        v-bind:title="lang.btn.folder"
+                    >
+                        <i class="bi bi-folder"></i>
+                    </button>
+                    <button
                         type="button"
                         class="btn btn-secondary"
                         v-bind:disabled="!clipboardType"
@@ -24,6 +33,11 @@ import translate from '../../mixins/translate';
 export default {
     name: 'NavbarBlock',
     mixins: [translate],
+    data() {
+        return {
+            role: role, // role is defined in blade template
+        };
+    },
     computed: {
         /**
          * Active manager name
@@ -40,6 +54,11 @@ export default {
         clipboardType() {
             return this.$store.state.fm.clipboard.type;
         },
+        
+        /**
+         * Whether role is editor
+         * 
+         */
     },
     methods: {
         /**
@@ -47,6 +66,17 @@ export default {
          */
         paste() {
             this.$store.dispatch('fm/paste');
+        },
+        /**
+         * Show modal window
+         * @param modalName
+         */
+        showModal(modalName) {
+            // show selected modal
+            this.$store.commit('fm/modal/setModalState', {
+                modalName,
+                show: true,
+            });
         },
     },
 };
