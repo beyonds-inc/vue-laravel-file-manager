@@ -123,3 +123,6 @@ VITE_LFM_BASE_URL=http://my-url.loc/file-manager/
 // if you don't want to use csrf-token - you can off it
 VITE_LFM_CSRF_TOKEN=OFF
 ```
+
+## ファイルマネージャー各要素に対応するファイル
+![FileManager Page](./src/assets/fm-page-element-to-filename.png)
