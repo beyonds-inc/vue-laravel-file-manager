@@ -35,7 +35,7 @@ export default {
     mixins: [translate],
     data() {
         return {
-            isEditor: isEditor,
+            isEditor: Number(isEditor),
         };
     },
     computed: {
