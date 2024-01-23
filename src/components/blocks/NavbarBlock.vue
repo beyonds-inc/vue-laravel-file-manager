@@ -4,7 +4,6 @@
             <div class="col-auto">
                 <div class="btn-group" role="group">
                     <button
-                        v-if="isEditor"
                         type="button"
                         class="btn btn-secondary"
                         v-on:click="showModal('NewFolderModal')"
