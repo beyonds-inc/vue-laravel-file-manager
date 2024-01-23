@@ -107,7 +107,7 @@ const ja = {
       access_2: '読み書き可能',
     },
     rename: {
-      directoryExist: 'ディレクトリが既に存在します',
+      directoryExist: 'フォルダが既に存在します',
       fieldName: '新しい名前を入力してください',
       fieldFeedback: 'この名前は使用できません',
       fileExist: 'ファイルが既に存在します',
@@ -173,9 +173,9 @@ const ja = {
     fileUpdated: 'ファイルを更新しました！',
     fileNotFound: 'ファイルが見つかりませんでした！',
     // directories
-    dirExist: 'ディレクトリが既に存在します！',
-    dirCreated: 'ディレクトリを生成しました！',
-    dirNotFound: 'ディレクトリが見つかりませんでした',
+    dirExist: 'フォルダが既に存在します！',
+    dirCreated: 'フォルダを生成しました！',
+    dirNotFound: 'フォルダが見つかりませんでした',
     // actions
     uploaded: 'ファイルを全てアップロードしました！',
     notAllUploaded: 'ファイルの一部がアップロードできませんでした！',
