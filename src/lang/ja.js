@@ -147,7 +147,7 @@ const ja = {
       fieldRadio1: '現在フォルダ',
       fieldRadio2: '新しいフォルダ',
       fieldFeedback: 'フォルダが既に存在します',
-      warning: '注意同名の場合、ファイルが上書きされます',
+      warning: '注意 : 同名の場合、ファイルが上書きされます',
     },
     cropper: {
       title: '切り出し',
