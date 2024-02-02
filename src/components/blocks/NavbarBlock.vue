@@ -6,6 +6,14 @@
                     <button
                         type="button"
                         class="btn btn-secondary"
+                        v-on:click="showModal('NewFolderModal')"
+                        v-bind:title="lang.btn.folder"
+                    >
+                        <i class="bi bi-folder"></i>
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
                         v-bind:disabled="!clipboardType"
                         v-bind:title="lang.btn.paste"
                         v-on:click="paste"
@@ -24,6 +32,11 @@ import translate from '../../mixins/translate';
 export default {
     name: 'NavbarBlock',
     mixins: [translate],
+    data() {
+        return {
+            isEditor: Number(isEditor),
+        };
+    },
     computed: {
         /**
          * Active manager name
@@ -47,6 +60,17 @@ export default {
          */
         paste() {
             this.$store.dispatch('fm/paste');
+        },
+        /**
+         * Show modal window
+         * @param modalName
+         */
+        showModal(modalName) {
+            // show selected modal
+            this.$store.commit('fm/modal/setModalState', {
+                modalName,
+                show: true,
+            });
         },
     },
 };

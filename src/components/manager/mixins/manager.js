@@ -138,9 +138,7 @@ export default {
             }
 
             // create event
-            if (type === 'files') {
-                EventBus.emit('contextMenu', event);
-            }
+            EventBus.emit('contextMenu', event);
         },
 
         /**
