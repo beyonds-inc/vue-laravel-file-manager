@@ -109,6 +109,10 @@ export default {
         GET.content(disk, path).then((response) => {
             if (response.data.result.status === 'success') {
                 context.commit(`${manager}/setDirectoryContent`, response.data);
+            } else {
+                // アクセス権限がない場合、ディスク最上位ディレクトリに移動
+                context.commit(`${manager}/setSelectedDirectory`, null);
+                context.dispatch(`${manager}/refreshDirectory`);
             }
         });
     },
