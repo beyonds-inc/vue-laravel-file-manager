@@ -1,5 +1,6 @@
 // Event bus
 import EventBus from '../../../emitter';
+import axios from 'axios';
 
 export default {
     computed: {
@@ -199,7 +200,45 @@ export default {
                     disk: this.selectedDisk,
                     path,
                 });
+            } else if (extension.toLowerCase() === 'docx' || extension.toLowerCase() === 'doc') {
+                // show word in PDF
+								var disk= this.selectedDisk;
+								var fileInfo = this.sendFileToServer(disk,path)
+									.then(data => {
+											fileInfo = data;
+											this.$store.dispatch('fm/openPDF', {
+												disk: fileInfo[0],
+												path: fileInfo[1],
+											});
+									})
+									.catch(error => {
+											console.error('ファイルのアップロードに失敗しました:', error);
+									});	
             }
+        },
+
+				/**
+         * Send file to Server
+				 * @param disk
+         * @param path
+         */
+        async sendFileToServer(disk, path) {
+						const formData = new FormData();
+						formData.append('file_disk', disk);
+						formData.append('file_path', path);
+			
+						return await axios.post('/api/display', formData, {
+								headers: {
+										'Content-Type': 'multipart/form-data'
+								}
+						})
+						.then(response => {
+								return response.data; 
+						})
+						.catch(error => {
+								console.error(error);
+								throw error; 
+						});	
         },
     },
 };
