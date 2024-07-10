@@ -228,7 +228,7 @@ export default {
          * Send file to Server
 				 * @param disk
          * @param path
-         */	 
+         */
         async sendFileToServer(disk, path) {
 						const formData = new FormData();
 						formData.append('file_disk', disk);
