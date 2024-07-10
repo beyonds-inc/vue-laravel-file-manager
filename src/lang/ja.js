@@ -187,6 +187,8 @@ const ja = {
     zipError: 'アーカイブ生成にエラーが発生しました！',
     // acl
     aclError: 'アクセスが拒否されました！',
+    // display pdf
+    pdfError: 'プレビュー表示に失敗しました'
   },
 };
 

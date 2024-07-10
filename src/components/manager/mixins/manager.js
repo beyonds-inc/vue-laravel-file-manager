@@ -202,18 +202,25 @@ export default {
                 });
             } else if (extension.toLowerCase() === 'docx' || extension.toLowerCase() === 'doc') {
                 // show word in PDF
-								var disk= this.selectedDisk;
+								var disk = this.selectedDisk;
 								var fileInfo = this.sendFileToServer(disk,path)
-									.then(data => {
-											fileInfo = data;
-											this.$store.dispatch('fm/openPDF', {
-												disk: fileInfo[0],
-												path: fileInfo[1],
-											});
-									})
-									.catch(error => {
-											console.error('ファイルのアップロードに失敗しました:', error);
-									});	
+										.then(data => {
+												fileInfo = data;
+												if (fileInfo.length==0){
+														EventBus.emit('addNotification', {
+																status: 'error',
+																message: this.lang.response.pdfError,
+														});
+														return;
+												}
+												this.$store.dispatch('fm/openPDF', {
+														disk: fileInfo[0],
+														path: fileInfo[1],
+												});
+										})
+										.catch(error => {
+												console.error('処理中にエラーが発生しました:', error);
+										});	
             }
         },
 
@@ -221,7 +228,7 @@ export default {
          * Send file to Server
 				 * @param disk
          * @param path
-         */
+         */	 
         async sendFileToServer(disk, path) {
 						const formData = new FormData();
 						formData.append('file_disk', disk);
@@ -235,10 +242,6 @@ export default {
 						.then(response => {
 								return response.data; 
 						})
-						.catch(error => {
-								console.error(error);
-								throw error; 
-						});	
         },
     },
 };
