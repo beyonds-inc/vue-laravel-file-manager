@@ -202,46 +202,45 @@ export default {
                 });
             } else if (extension.toLowerCase() === 'docx' || extension.toLowerCase() === 'doc') {
                 // show word in PDF
-								var disk = this.selectedDisk;
-								var fileInfo = this.sendFileToServer(disk,path)
-										.then(data => {
-												fileInfo = data;
-												if (fileInfo.length==0){
-														EventBus.emit('addNotification', {
-																status: 'error',
-																message: this.lang.response.pdfError,
-														});
-														return;
-												}
-												this.$store.dispatch('fm/openPDF', {
-														disk: fileInfo[0],
-														path: fileInfo[1],
-												});
-										})
-										.catch(error => {
-												console.error('処理中にエラーが発生しました:', error);
-										});	
+				var disk = this.selectedDisk;
+                this.sendFileToServer(disk,path)
+                    .then(fileInfo => {
+                        if (fileInfo.length == 0) {
+                            EventBus.emit('addNotification', {
+                                status: 'error',
+                                message: this.lang.response.pdfError,
+                            });
+                            return;
+                        }
+                        this.$store.dispatch('fm/openPDF', {
+                            disk: fileInfo[0],
+                            path: fileInfo[1],
+                        });
+                    })
+                    .catch(error => {
+                        console.error('処理中にエラーが発生しました:', error);
+                    });	
             }
         },
 
-				/**
+		/**
          * Send file to Server
-				 * @param disk
+         * @param disk
          * @param path
          */
         async sendFileToServer(disk, path) {
-						const formData = new FormData();
-						formData.append('file_disk', disk);
-						formData.append('file_path', path);
+            const formData = new FormData();
+            formData.append('file_disk', disk);
+            formData.append('file_path', path);
 			
-						return await axios.post('/api/display', formData, {
-								headers: {
-										'Content-Type': 'multipart/form-data'
-								}
-						})
-						.then(response => {
-								return response.data; 
-						})
+            return await axios.post('/api/word-to-pdf/convert', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(response => {
+                return response.data; 
+           })
         },
     },
 };
