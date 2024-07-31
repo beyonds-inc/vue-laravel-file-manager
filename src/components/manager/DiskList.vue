@@ -64,5 +64,10 @@ export default {
     .badge.bg-light {
         cursor: pointer;
     }
+
+    .badge {
+        padding: 10px;
+        font-size: 100%;
+    }
 }
 </style>
