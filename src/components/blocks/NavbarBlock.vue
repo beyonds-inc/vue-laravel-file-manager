@@ -24,7 +24,6 @@
                 <div>
                     <a
                         id="upload-link-button"
-                        :href="uploadUrl"
                         class="ml-4 btn back-blue bluebtn-hover shadow roundness-10"
                         role="button"
                         style="color: #fff;"
