@@ -345,7 +345,6 @@ export default {
 
     .description {
         max-width: 200px;
-        position: relative;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -368,7 +367,7 @@ export default {
         width: 400px;
         position: absolute;
         top: 0;
-        left: 0;
+        right: 0;
     }
 
     .image-popup-wrapper img {
