@@ -107,18 +107,50 @@ export default {
         },
 
         /**
-         * Copy URL of selected item
+         * 選択したファイルのURLをクリップボードにコピー
+         * DBに該当ファイルのデータが存在しない場合はコピー不可。
+         * 
          */
-        copyUrlAction() {
-            var currentUrl = window.location.origin + window.location.pathname.replace('client', 'medical') +
-                            '?leftDisk=' + encodeURIComponent(this.selectedDisk) +
-                            '&leftPath=' + encodeURIComponent(this.selectedItems[0].dirname) +
-                            '&baseName=' + encodeURIComponent(this.selectedItems[0].basename);
-            navigator.clipboard.writeText(currentUrl);
-            EventBus.emit('addNotification', {
-                status: 'success',
-                message: this.lang.notifications.copyUrl,
-            });
+        async copyUrlAction() {
+            // ファイルのアクセスリンクを取得するAPIエンドポイント
+            const GET_FILE_LINK_ENDPOINT = '/api/materials/get-file-link';
+            const api_url = window.location.origin + GET_FILE_LINK_ENDPOINT;
+            const data = {
+                disk: this.selectedDisk,
+                path: this.selectedItems[0].path,
+            }
+
+            // APIエンドポイントにリクエストを送信
+            const response = await fetch(api_url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            }).then(response => response.json());
+
+            // レスポンスに応じて通知を表示
+            if (response.status === 'success') {
+                navigator.clipboard.writeText(response.link);
+                EventBus.emit('addNotification', {
+                    status: 'success',
+                    message: this.lang.notifications.copyUrl,
+                });
+            }
+            // DBでファイルが見つからなかった場合
+            else if (response.status === 'material_not_found') {
+                EventBus.emit('addNotification', {
+                    status: 'error',
+                    message: this.lang.response.fileNotFound,
+                });
+            }
+            // その他のエラー
+            else {
+                EventBus.emit('addNotification', {
+                    status: 'error',
+                    message: 'URLコピーに失敗しました！',
+                });
+            }
         },
 
         /**
