@@ -113,8 +113,8 @@ export default {
          */
         async copyUrlAction() {
             // ファイルのアクセスリンクを取得するAPIエンドポイント
-            const GET_FILE_LINK_ENDPOINT = '/api/materials/get-file-link';
-            const api_url = window.location.origin + GET_FILE_LINK_ENDPOINT;
+            const GET_MATERIAL_LINK_ENDPOINT = '/api/materials/get-material-link';
+            const api_url = window.location.origin + GET_MATERIAL_LINK_ENDPOINT;
             const data = {
                 disk: this.selectedDisk,
                 path: this.selectedItems[0].path,
