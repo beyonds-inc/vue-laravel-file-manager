@@ -97,8 +97,7 @@ export default {
          * @returns {boolean}
          */
         renameRule() {
-            // return !this.multiSelect && this.$store.getters['fm/isEverySelectedItemRW'];
-            return false;
+            return !this.multiSelect && this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
         /**
