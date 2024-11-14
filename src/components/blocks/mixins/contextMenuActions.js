@@ -4,6 +4,10 @@ import EventBus from '../../../emitter';
  * Context menu actions
  * {name}Action
  */
+
+// ファイルのアクセスリンクを取得するAPIエンドポイント
+const GET_MATERIAL_LINK_ENDPOINT = '/api/materials/get-material-link';
+
 export default {
     methods: {
         /**
@@ -112,44 +116,73 @@ export default {
          * 
          */
         async copyUrlAction() {
-            // ファイルのアクセスリンクを取得するAPIエンドポイント
-            const GET_MATERIAL_LINK_ENDPOINT = '/api/materials/get-material-link';
-            const api_url = window.location.origin + GET_MATERIAL_LINK_ENDPOINT;
+            // URLコピーするファイルのディスク、パス
             const data = {
                 disk: this.selectedDisk,
                 path: this.selectedItems[0].path,
             }
 
-            // APIエンドポイントにリクエストを送信
-            const response = await fetch(api_url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            }).then(response => response.json());
-
-            // レスポンスに応じて通知を表示
-            if (response.status === 'success') {
-                navigator.clipboard.writeText(response.link);
-                EventBus.emit('addNotification', {
-                    status: 'success',
-                    message: this.lang.notifications.copyUrl,
-                });
-            }
-            // DBでファイルが見つからなかった場合
-            else if (response.status === 'material_not_found') {
-                EventBus.emit('addNotification', {
-                    status: 'error',
-                    message: this.lang.response.fileNotFound,
-                });
-            }
-            // その他のエラー
-            else {
+            try {
+                // バックエンドAPIからのレスポンス
+                const response = await this.fetchMaterialLink(data);
+    
+                // レスポンスに応じて通知を表示
+                if (response.status === 'success') {
+                    navigator.clipboard.writeText(response.link);
+                    EventBus.emit('addNotification', {
+                        status: 'success',
+                        message: this.lang.notifications.copyUrl,
+                    });
+                }
+                // DBでファイルが見つからなかった場合
+                else if (response.status === 'material_not_found') {
+                    EventBus.emit('addNotification', {
+                        status: 'error',
+                        message: this.lang.response.fileNotFound,
+                    });
+                }
+                // その他のエラー
+                else {
+                    EventBus.emit('addNotification', {
+                        status: 'error',
+                        message: 'URLコピーに失敗しました！',
+                    });
+                }
+            } catch (error) {
+                console.error(error);
                 EventBus.emit('addNotification', {
                     status: 'error',
                     message: 'URLコピーに失敗しました！',
                 });
+            }
+        },
+
+        /**
+         * バックエンドAPIからファイルのアクセスリンクを取得
+         * 
+         */
+        async fetchMaterialLink(data) {
+            // ファイルのアクセスリンクを取得するAPIエンドポイント
+            const api_url = window.location.origin + GET_MATERIAL_LINK_ENDPOINT;
+
+            // APIエンドポイントにリクエストを送信
+            try {
+                const response = await fetch(api_url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+        
+                if (!response.ok) {
+                    throw new Error('HTTP status ' + response.status);
+                }
+        
+                return await response.json();
+            } catch (err) {
+                console.error('Fetch error:', err);
+                throw err;
             }
         },
 
