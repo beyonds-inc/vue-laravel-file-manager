@@ -24,6 +24,7 @@ const pl = {
         upload: 'Wyślij plik',
         uploadSelect: 'Wybierz pliki',
         hidden: 'Ukryte pliki',
+        save: 'Zapisz',
     },
     clipboard: {
         actionType: 'Rodzaj',

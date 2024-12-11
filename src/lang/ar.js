@@ -24,6 +24,7 @@ const ar = {
         upload: 'رفع',
         uploadSelect: 'اختر الملفات',
         hidden: 'الملفات المخفية',
+        save: 'حفظ',
     },
     clipboard: {
         actionType: 'نوع',

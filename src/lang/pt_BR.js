@@ -25,6 +25,7 @@ const pt_BR = {
         upload: 'Upload',
         uploadSelect: 'Selecionar arquivos',
         hidden: ' Arquivos ocultos',
+        save: 'Salvar',
     },
     clipboard: {
         actionType: 'Formato',

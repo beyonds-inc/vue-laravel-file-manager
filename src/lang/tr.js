@@ -24,6 +24,7 @@ const tr = {
         upload: 'Yükle',
         uploadSelect: 'Dosyaları seç',
         hidden: ' Gizli dosyalar',
+        save: 'Kaydet',
     },
     clipboard: {
         actionType: 'İşlem türü',

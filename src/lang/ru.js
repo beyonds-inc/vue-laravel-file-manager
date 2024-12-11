@@ -24,6 +24,7 @@ const ru = {
         upload: 'Загрузить',
         uploadSelect: 'Выбрать файлы',
         hidden: 'Скрытые файлы',
+        save: 'Сохранить',
     },
     clipboard: {
         actionType: 'Тип операции',

@@ -25,6 +25,7 @@ const fa = {
         upload: 'بارگذاری',
         uploadSelect: 'انتخاب فایل',
         hidden: ' فایل های مخفی',
+        save: 'ذخیره',
     },
     clipboard: {
         actionType: 'نوع',

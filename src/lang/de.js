@@ -24,6 +24,7 @@ const de = {
         upload: 'Hochladen',
         uploadSelect: 'Auswählen',
         hidden: ' Versteckte Dateien',
+        save: 'Speichern',
     },
     clipboard: {
         actionType: 'Type',

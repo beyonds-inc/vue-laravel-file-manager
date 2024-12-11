@@ -25,6 +25,7 @@ const zh_TW = {
         upload: '上傳',
         uploadSelect: '選擇文件',
         hidden: ' 隱藏文件',
+        save: '儲存',
     },
     clipboard: {
         actionType: '類型',
