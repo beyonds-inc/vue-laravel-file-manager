@@ -27,6 +27,7 @@ const nl = {
         upload: 'Uploaden',
         uploadSelect: 'Selecteer bestanden',
         hidden: ' Verborgen bestanden',
+        save: 'Opslaan',
     },
     clipboard: {
         actionType: 'Type',

@@ -7,15 +7,18 @@
         <div class="modal-body">
             <div class="form-group">
                 <label for="fm-input-rename">{{ lang.modal.rename.fieldName }}</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="fm-input-rename"
-                    v-focus
-                    v-bind:class="{ 'is-invalid': checkName }"
-                    v-model="name"
-                    v-on:keyup="validateName"
-                />
+                <div class="flex">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="fm-input-rename"
+                        v-focus
+                        v-bind:class="{ 'is-invalid': checkName }"
+                        v-model="filename"
+                        v-on:keyup="validateName"
+                    />
+                    <label for="fm-input-rename" v-show="extension !== ''">.{{ extension }}</label>
+                </div>
                 <div class="invalid-feedback" v-show="checkName">
                     {{ lang.modal.rename.fieldFeedback }}
                     {{ directoryExist ? ` - ${lang.modal.rename.directoryExist}` : '' }}
@@ -25,7 +28,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-info" v-bind:disabled="submitDisable" v-on:click="rename">
-                {{ lang.btn.submit }}
+                {{ lang.btn.save }}
             </button>
             <button type="button" class="btn btn-light" v-on:click="hideModal">{{ lang.btn.cancel }}</button>
         </div>
@@ -41,7 +44,8 @@ export default {
     mixins: [modal, translate],
     data() {
         return {
-            name: '',
+            filename: '',
+            extension: '',
             directoryExist: false,
             fileExist: false,
         };
@@ -60,7 +64,7 @@ export default {
          * @returns {boolean}
          */
         checkName() {
-            return this.directoryExist || this.fileExist || !this.name;
+            return this.directoryExist || this.fileExist || !this.filename;
         },
 
         /**
@@ -68,26 +72,34 @@ export default {
          * @returns {*|boolean}
          */
         submitDisable() {
-            return this.checkName || this.name === this.selectedItem.basename;
+            return this.checkName || this.basename === this.selectedItem.basename;
+        },
+
+        /**
+         * file name + extension 
+         */
+        basename() {
+            return this.extension === '' ? this.filename : this.filename + '.' + this.extension;
         },
     },
     mounted() {
         // initiate item name
-        this.name = this.selectedItem.basename;
+        this.filename = this.selectedItem.filename;
+        this.extension = this.selectedItem.extension;
     },
     methods: {
         /**
          * Validate item name
          */
         validateName() {
-            if (this.name !== this.selectedItem.basename) {
+            if (this.basename !== this.selectedItem.basename) {
                 // if item - folder
                 if (this.selectedItem.type === 'dir') {
                     // check folder name matches
-                    this.directoryExist = this.$store.getters[`fm/${this.activeManager}/directoryExist`](this.name);
+                    this.directoryExist = this.$store.getters[`fm/${this.activeManager}/directoryExist`](this.basename);
                 } else {
                     // check file name matches
-                    this.fileExist = this.$store.getters[`fm/${this.activeManager}/fileExist`](this.name);
+                    this.fileExist = this.$store.getters[`fm/${this.activeManager}/fileExist`](this.basename);
                 }
             }
         },
@@ -97,7 +109,7 @@ export default {
          */
         rename() {
             // create new name with path
-            const newName = this.selectedItem.dirname ? `${this.selectedItem.dirname}/${this.name}` : this.name;
+            const newName = this.selectedItem.dirname ? `${this.selectedItem.dirname}/${this.basename}` : this.basename;
 
             this.$store
                 .dispatch('fm/rename', {
@@ -113,3 +125,9 @@ export default {
     },
 };
 </script>
+<style scoped>
+.flex {
+    display: flex;
+    align-items: baseline;
+}
+</style>

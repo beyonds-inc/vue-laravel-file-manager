@@ -25,6 +25,7 @@ const hu = {
         upload: 'Feltöltés',
         uploadSelect: 'Fájlok kiválasztása',
         hidden: ' Rejtett fájlok',
+        save: 'Mentés',
     },
     clipboard: {
         actionType: 'Típus',

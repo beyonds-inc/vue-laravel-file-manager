@@ -26,6 +26,7 @@ const zh_CN = {
         upload: '上传',
         uploadSelect: '选择文件',
         hidden: ' 隐藏文件',
+        save: '保存',
     },
     clipboard: {
         actionType: '类型',

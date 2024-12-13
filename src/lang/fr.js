@@ -24,6 +24,7 @@ const fr = {
         upload: 'Télécharger',
         uploadSelect: 'Sélectionner fichiers',
         hidden: ' Masquer fichiers',
+        save: 'Sauvegarder',
     },
     clipboard: {
         actionType: 'Type',

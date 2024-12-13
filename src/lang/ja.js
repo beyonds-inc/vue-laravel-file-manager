@@ -24,6 +24,7 @@ const ja = {
     upload: 'アップロード',
     uploadSelect: 'ファイル選択',
     hidden: ' 隠しファイル',
+    save: '保存',
   },
   clipboard: {
     actionType: 'タイプ',

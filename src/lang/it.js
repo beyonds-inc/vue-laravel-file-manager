@@ -25,6 +25,7 @@ const it = {
         upload: 'Upload',
         uploadSelect: 'Seleziona files',
         hidden: ' Files Nascosti',
+        save: 'Salva',
     },
     clipboard: {
         actionType: 'Tipo',

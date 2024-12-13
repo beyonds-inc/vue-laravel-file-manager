@@ -25,6 +25,7 @@ const cs = {
         upload: 'Nahrát',
         uploadSelect: 'Vybrat soubory',
         hidden: ' Skryté soubory',
+        save: 'Uložit',
     },
     clipboard: {
         actionType: 'Typ',
