@@ -29,11 +29,11 @@
                     <tbody>
                         <tr v-for="version in versions" :key="version.id">
                             <td>{{ version.version_number }}</td>
-                            <td>{{ timestampToDate(version.updated_at) }}</td>
-                            <td>{{ version.user ? version.user.name : '-' }}</td>
+                            <td>{{ timestampToDate(version.timestamp) }}</td>
+                            <td>{{ version.user_name ? version.user_name : '-' }}</td>
                             <td>
-                                <button 
-                                    class="btn btn-sm btn-primary" 
+                                <button
+                                    class="btn btn-sm btn-primary"
                                     v-on:click="downloadVersion(version.version_number)"
                                 >
                                     <i class="bi bi-download"></i> {{ lang.btn.download }}
@@ -86,10 +86,10 @@ export default {
         getVersions() {
             this.loading = true;
             this.error = null;
-            
+
             // API endpoint for getting file versions
             const apiUrl = `${window.location.origin}/api/materials/versions?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}`;
-            
+
             fetch(apiUrl)
                 .then(response => {
                     if (!response.ok) {
@@ -111,14 +111,14 @@ export default {
                     this.loading = false;
                 });
         },
-        
+
         /**
          * Download specific version
          * @param {number} versionNumber
          */
         downloadVersion(versionNumber) {
             const downloadUrl = `${window.location.origin}/api/materials/download-version?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}&version=${versionNumber}`;
-            
+
             const tempLink = document.createElement('a');
             tempLink.style.display = 'none';
             tempLink.href = downloadUrl;
@@ -135,14 +135,11 @@ export default {
 
 <style lang="scss">
 .fm-modal-versions {
-    .modal-body {
-        max-height: 70vh;
-        overflow-y: auto;
-    }
-    
     .table {
+        table-layout: auto;
         th, td {
             vertical-align: middle;
+            white-space: nowrap;
         }
     }
 }
