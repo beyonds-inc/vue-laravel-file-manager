@@ -24,6 +24,7 @@ import VideoPlayerModal from './views/VideoPlayerModal.vue';
 import ZipModal from './views/ZipModal.vue';
 import UnzipModal from './views/UnzipModal.vue';
 import AboutModal from './views/AboutModal.vue';
+import VersionsModal from './views/VersionsModal.vue';
 
 export default {
     name: 'ModalBlock',
@@ -43,6 +44,7 @@ export default {
         ZipModal,
         UnzipModal,
         AboutModal,
+        VersionsModal,
     },
     mounted() {
         // set height
