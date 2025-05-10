@@ -88,7 +88,7 @@ export default {
             this.error = null;
 
             // API endpoint for getting file versions
-            const apiUrl = `${window.location.origin}/api/materials/versions?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}`;
+            const apiUrl = `${window.location.origin}/${this.$store.state.fm.settings.baseUrl}/versions?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}`;
 
             fetch(apiUrl)
                 .then(response => {
@@ -117,7 +117,7 @@ export default {
          * @param {number} versionNumber
          */
         downloadVersion(versionNumber) {
-            const downloadUrl = `${window.location.origin}/api/materials/download-version?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}&version=${versionNumber}`;
+            const downloadUrl = `${window.location.origin}/${this.$store.state.fm.settings.baseUrl}/download-version?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}&version=${versionNumber}`;
 
             const tempLink = document.createElement('a');
             tempLink.style.display = 'none';
