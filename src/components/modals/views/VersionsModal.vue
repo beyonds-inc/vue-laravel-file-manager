@@ -81,6 +81,18 @@ export default {
     },
     methods: {
         /**
+         * Get base URL with proper formatting
+         * @returns {string}
+         */
+        getBaseUrl() {
+            let baseUrl = this.$store.state.fm.settings.baseUrl;
+            if (baseUrl.endsWith('/')) {
+                baseUrl = baseUrl.slice(0, -1);
+            }
+            return baseUrl;
+        },
+        
+        /**
          * Get file versions
          */
         getVersions() {
@@ -88,7 +100,10 @@ export default {
             this.error = null;
 
             // API endpoint for getting file versions
-            const apiUrl = `${window.location.origin}/${this.$store.state.fm.settings.baseUrl}/versions?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}`;
+            const baseUrl = this.getBaseUrl();
+            const apiUrl = baseUrl.startsWith('http')
+                ? `${baseUrl}/versions?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}`
+                : `${window.location.origin}/${baseUrl}/versions?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}`;
 
             fetch(apiUrl)
                 .then(response => {
@@ -117,7 +132,10 @@ export default {
          * @param {number} versionNumber
          */
         downloadVersion(versionNumber) {
-            const downloadUrl = `${window.location.origin}/${this.$store.state.fm.settings.baseUrl}/download-version?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}&version=${versionNumber}`;
+            const baseUrl = this.getBaseUrl();
+            const downloadUrl = baseUrl.startsWith('http')
+                ? `${baseUrl}/download-version?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}&version=${versionNumber}`
+                : `${window.location.origin}/${baseUrl}/download-version?disk=${encodeURIComponent(this.selectedDisk)}&path=${encodeURIComponent(this.selectedItem.path)}&version=${versionNumber}`;
 
             const tempLink = document.createElement('a');
             tempLink.style.display = 'none';
