@@ -138,7 +138,7 @@ const ja = {
       title: 'ファイルアップロード',
     },
     editor: {
-      title: 'エディタ',
+      title: 'テキストビューア',
     },
     audioPlayer: {
       title: 'オーディオプレーヤー',
