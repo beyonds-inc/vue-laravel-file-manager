@@ -34,6 +34,7 @@
                             <i class="bi bi-sort-up" v-show="sortSettings.direction === 'up'" />
                         </template>
                     </th>
+                    <th class="table-actions w-5 text-center" title="アクション">&#x22EE;</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,6 +64,16 @@
                     <td>{{ lang.manager.table.folder }}</td>
                     <td>
                         {{ timestampToDate(directory.timestamp) }}
+                    </td>
+                    <td class="text-center">
+                        <button 
+                            type="button" 
+                            class="btn btn-sm btn-outline-secondary context-menu-btn"
+                            @click="contextMenu(directory, $event)"
+                            aria-label="メニューを開く"
+                        >
+                            <i class="bi bi-three-dots"></i>
+                        </button>
                     </td>
                 </tr>
                 <tr
@@ -120,6 +131,16 @@
                     </td>
                     <td>
                         {{ timestampToDate(file.timestamp) }}
+                    </td>
+                    <td class="text-center">
+                        <button 
+                            type="button" 
+                            class="btn btn-sm btn-outline-secondary context-menu-btn"
+                            @click="contextMenu(file, $event)"
+                            aria-label="メニューを開く"
+                        >
+                            <i class="bi bi-three-dots"></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -424,6 +445,20 @@ export default {
     }
     .table-type {
         min-width: 80px;
+    }
+    .table-actions {
+        min-width: 50px;
+    }
+    .w-5 {
+        width: 5%;
+    }
+    .context-menu-btn {
+        border: none;
+        background: transparent;
+        padding: 0.25rem 0.5rem;
+        &:hover {
+            background-color: #f8f9fa;
+        }
     }
 }
 </style>
