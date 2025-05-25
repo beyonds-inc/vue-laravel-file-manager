@@ -17,9 +17,9 @@
             />
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-info" v-on:click="updateFile">
+            <!--button type="button" class="btn btn-info" v-on:click="updateFile">
                 {{ lang.btn.submit }}
-            </button>
+            </button-->
             <button type="button" class="btn btn-light" v-on:click="hideModal">
                 {{ lang.btn.cancel }}
             </button>
@@ -104,6 +104,7 @@ export default {
                 theme: 'blackboard',
                 lineNumbers: true,
                 line: true,
+                readOnly: true,
             };
         },
 

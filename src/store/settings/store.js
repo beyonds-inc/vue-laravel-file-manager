@@ -108,6 +108,10 @@ export default {
                     {
                         name: 'copyUrl',
                         icon: 'bi-link-45deg',
+                    },
+                    {
+                        name: 'versions',
+                        icon: 'bi-clock-history',
                     }
                 ],
                 [
