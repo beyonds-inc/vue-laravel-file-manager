@@ -189,7 +189,8 @@ const ja = {
     // acl
     aclError: 'アクセスが拒否されました！',
     // display pdf
-    pdfError: 'プレビュー表示に失敗しました'
+    pdfError: 'プレビュー表示に失敗しました',
+    shortIdGenError: '短いファイルIDの生成に失敗しました'
   },
 };
 
