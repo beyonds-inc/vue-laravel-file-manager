@@ -34,7 +34,7 @@
                             <i class="bi bi-sort-up" v-show="sortSettings.direction === 'up'" />
                         </template>
                     </th>
-                    <th class="table-actions w-5">{{ lang.manager.table.actions || 'アクション' }}</th>
+                    <th class="table-actions w-5" title="アクション">&#x22EE;</th>
                 </tr>
             </thead>
             <tbody>
