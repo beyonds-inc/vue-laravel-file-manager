@@ -17,7 +17,7 @@
                         v-model="filename"
                         v-on:keyup="validateName"
                     />
-                    <label for="fm-input-rename" v-show="extension !== ''">.{{ extension }}</label>
+                    <label for="fm-input-rename" v-show="hasExtension">.{{ extension }}</label>
                 </div>
                 <div class="invalid-feedback" v-show="checkName">
                     {{ lang.modal.rename.fieldFeedback }}
@@ -76,16 +76,31 @@ export default {
         },
 
         /**
+         * Check if extension exists and is not empty
+         * @returns {boolean}
+         */
+        hasExtension() {
+            return this.extension && this.extension !== '';
+        },
+
+        /**
          * file name + extension 
          */
         basename() {
-            return this.extension === '' ? this.filename : this.filename + '.' + this.extension;
+            return this.hasExtension ? this.filename + '.' + this.extension : this.filename;
         },
     },
     mounted() {
         // initiate item name
-        this.filename = this.selectedItem.filename;
-        this.extension = this.selectedItem.extension;
+        if (this.selectedItem.type === 'dir') {
+            // For directories, use basename as the filename
+            this.filename = this.selectedItem.basename;
+            this.extension = '';
+        } else {
+            // For files, use filename and extension
+            this.filename = this.selectedItem.filename;
+            this.extension = this.selectedItem.extension;
+        }
     },
     methods: {
         /**
