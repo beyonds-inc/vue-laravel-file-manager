@@ -161,5 +161,19 @@ export default {
         versionsRule() {
             return !this.multiSelect && this.firstItemType === 'file';
         },
+
+        /**
+         * Sign document - menu item status - show or hide
+         * @returns {boolean}
+         */
+        signDocumentRule() {
+            return (
+                    !this.multiSelect 
+                    && this.firstItemType === 'file'
+                    && this.isPdf(this.selectedItems[0].extension)
+                    && typeof isDoctor !== 'undefined'
+                    && isDoctor === '1'
+                );
+        }
     },
 };

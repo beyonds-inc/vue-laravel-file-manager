@@ -275,5 +275,39 @@ export default {
                 show: true,
             });
         },
+
+        /**
+         * Sign document action - 署名ページへGETで画面遷移
+         */
+        signDocumentAction() {
+            const selectedFile = this.selectedItems[0];
+            if (!selectedFile.material_id) {
+                EventBus.emit('addNotification', {
+                    status: 'error',
+                    message: 'ファイル情報が取得できませんでした。',
+                });
+                return;
+            }
+            
+            // 署名ページのURL取得
+            const targetUrl = this.getActionUrl('signature') + '/' + selectedFile.material_id;
+
+            // 画面遷移
+            window.location.href = targetUrl;
+        },
+
+        /**
+         * アクション先のURLをbladeから取得
+         * @param {string} actionName - アクション名
+         * @param {string} fallback - フォールバックURL
+         * @returns {string}
+         */
+        getActionUrl(actionName, fallback = '') {
+            if (typeof actionUrls !== 'undefined' && actionUrls[actionName]) {
+                return actionUrls[actionName];
+            }
+            
+            return fallback;
+        },
     },
 };

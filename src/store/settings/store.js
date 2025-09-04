@@ -112,6 +112,10 @@ export default {
                     {
                         name: 'versions',
                         icon: 'bi-clock-history',
+                    },
+                    {
+                        name: 'signDocument',
+                        icon: 'bi-pen-fill',
                     }
                 ],
                 [

@@ -100,5 +100,18 @@ export default {
 
             return extension.toLowerCase() === 'zip';
         },
+
+        /**
+         * 
+         * PDF file or not
+         * @param extension
+         * @returns {boolean}
+         */
+        isPdf(extension) {
+            // extension not found
+            if (!extension) return false;
+
+            return extension.toLowerCase() === 'pdf';
+        },
     },
 };
