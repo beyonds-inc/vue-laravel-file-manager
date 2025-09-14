@@ -264,5 +264,16 @@ export default {
                 show: true,
             });
         },
+
+        /**
+         * Show version history for selected file
+         */
+        versionsAction() {
+            // show modal - version history
+            this.$store.commit('fm/modal/setModalState', {
+                modalName: 'VersionsModal',
+                show: true,
+            });
+        },
     },
 };

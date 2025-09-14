@@ -153,5 +153,13 @@ export default {
             // return !this.multiSelect;
             return false;
         },
+
+        /**
+         * Versions - menu item status - show or hide
+         * @returns {boolean}
+         */
+        versionsRule() {
+            return !this.multiSelect && this.firstItemType === 'file';
+        },
     },
 };

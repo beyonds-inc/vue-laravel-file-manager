@@ -51,6 +51,7 @@ const ja = {
     audioPlay: '再生',
     videoPlay: '動画再生',
     copyUrl: 'URLコピー',
+    versions: 'バージョン履歴',
   },
   info: {
     directories: 'フォルダ:',
@@ -107,6 +108,15 @@ const ja = {
       access_1: '読み取り専用',
       access_2: '読み書き可能',
     },
+    versions: {
+      title: 'ファイルバージョン履歴',
+      version: 'バージョン',
+      date: '更新日時',
+      user: '更新者',
+      action: 'アクション',
+      noVersions: 'バージョン履歴がありません',
+      error: 'バージョン履歴の取得に失敗しました',
+    },
     rename: {
       directoryExist: 'ディレクトリが既に存在します',
       fieldName: '新しい名前を入力してください',
@@ -128,7 +138,7 @@ const ja = {
       title: 'ファイルアップロード',
     },
     editor: {
-      title: 'エディタ',
+      title: 'テキストビューア',
     },
     audioPlayer: {
       title: 'オーディオプレーヤー',
@@ -189,7 +199,8 @@ const ja = {
     // acl
     aclError: 'アクセスが拒否されました！',
     // display pdf
-    pdfError: 'プレビュー表示に失敗しました'
+    pdfError: 'プレビュー表示に失敗しました',
+    shortIdGenError: '短いファイルIDの生成に失敗しました'
   },
 };
 
