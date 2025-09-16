@@ -139,7 +139,7 @@ export default {
          */
         deleteRule() {
             // forbid medical users from deleting folders
-            if (!this.selectedItems.every((elem) => elem.type === 'file') && !isEditor) {
+            if (!this.selectedItems.every((elem) => elem.type === 'file') && !window.isEditor) {
                 return false;
             }
             return this.$store.getters['fm/isEverySelectedItemRW'];
@@ -171,8 +171,8 @@ export default {
                     !this.multiSelect 
                     && this.firstItemType === 'file'
                     && this.isPdf(this.selectedItems[0].extension)
-                    && typeof isDoctor !== 'undefined'
-                    && isDoctor === '1'
+                    && window.isDoctor !== undefined
+                    && window.isDoctor === '1'
                 );
         }
     },
