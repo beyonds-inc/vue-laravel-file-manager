@@ -52,6 +52,7 @@ const ja = {
     videoPlay: '動画再生',
     copyUrl: 'URLコピー',
     versions: 'バージョン履歴',
+    signDocument: '署名する',
   },
   info: {
     directories: 'フォルダ:',

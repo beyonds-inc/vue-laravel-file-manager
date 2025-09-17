@@ -139,7 +139,7 @@ export default {
          */
         deleteRule() {
             // forbid medical users from deleting folders
-            if (!this.selectedItems.every((elem) => elem.type === 'file') && !isEditor) {
+            if (!this.selectedItems.every((elem) => elem.type === 'file') && !window.isEditor) {
                 return false;
             }
             return this.$store.getters['fm/isEverySelectedItemRW'];
@@ -161,5 +161,19 @@ export default {
         versionsRule() {
             return !this.multiSelect && this.firstItemType === 'file';
         },
+
+        /**
+         * Sign document - menu item status - show or hide
+         * @returns {boolean}
+         */
+        signDocumentRule() {
+            return (
+                    !this.multiSelect 
+                    && this.firstItemType === 'file'
+                    && this.isPdf(this.selectedItems[0].extension)
+                    && window.isDoctor !== undefined
+                    && window.isDoctor === '1'
+                );
+        }
     },
 };

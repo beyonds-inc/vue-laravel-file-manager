@@ -95,6 +95,7 @@
                         <i class="bi icon" v-bind:class="extensionToIcon(file.extension)" @mouseenter="showImagePopup(index); setImgSrc(file);" />
                         <span class="filename" @mouseenter="showTitlePopup(index)" >{{ file.filename ?? file.basename }}</span>
                         <span v-if="isFileNew(file.timestamp)" class="new-indicator">NEW</span>
+                        <span v-if="file.is_signed" class="sign-indicator">SIGNED</span>
                         <div class="image-popup-wrapper">
                             <Transition>
                                 <div v-if="!hasClosed && showImageFlag && showIndex === index && imageExtensions.includes(file.extension)" class="image-popup" :style="{ marginTop: '-' + windowTop + 'px' }">
@@ -419,6 +420,15 @@ export default {
     .new-indicator {
         color: #fff;
         background-color: #ff0000;
+        padding: 0 5px;
+        border-radius: 5px;
+        font-size: 12px;
+        margin-left: 5px;
+    }
+    
+    .sign-indicator {
+        color: #fff;
+        background-color: #28a745;
         padding: 0 5px;
         border-radius: 5px;
         font-size: 12px;
