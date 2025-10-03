@@ -88,6 +88,10 @@ export default {
          * @returns {boolean}
          */
         cutRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer) {
+                return false;
+            }
             return this.$store.getters['fm/isEverySelectedItemRW'] && this.selectedItems.every((elem) => elem.type === 'file');
             // return false;
         },
@@ -97,6 +101,10 @@ export default {
          * @returns {boolean}
          */
         renameRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer) {
+                return false;
+            }
             return !this.multiSelect && this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
@@ -105,6 +113,10 @@ export default {
          * @returns {boolean}
          */
         pasteRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer) {
+                return false;
+            }
             // return !!this.$store.state.fm.clipboard.type && this.$store.getters['fm/isEverySelectedItemRW'];
             return false;
         },
@@ -114,6 +126,10 @@ export default {
          * @returns {boolean}
          */
         zipRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer) {
+                return false;
+            }
             // return this.selectedDiskDriver === 'local' && this.$store.getters['fm/isEverySelectedItemRW'];
             return false;
         },
@@ -123,6 +139,10 @@ export default {
          * @returns {boolean}
          */
         unzipRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer) {
+                return false;
+            }
             // return (
             //     this.selectedDiskDriver === 'local' &&
             //     !this.multiSelect &&
@@ -138,6 +158,10 @@ export default {
          * @returns {boolean}
          */
         deleteRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer) {
+                return false;
+            }
             // forbid medical users from deleting folders
             if (!this.selectedItems.every((elem) => elem.type === 'file') && !window.isEditor) {
                 return false;
