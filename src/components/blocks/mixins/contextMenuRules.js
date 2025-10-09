@@ -97,6 +97,10 @@ export default {
          * @returns {boolean}
          */
         renameRule() {
+            // フォルダ（施設名）の名前変更を禁止
+            if (this.firstItemType === 'dir') {
+                return false;
+            }
             return !this.multiSelect && this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
