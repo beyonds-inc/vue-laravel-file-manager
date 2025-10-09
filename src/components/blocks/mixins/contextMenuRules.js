@@ -97,8 +97,8 @@ export default {
          * @returns {boolean}
          */
         renameRule() {
-            // フォルダ（施設名）の名前変更を禁止
-            if (this.firstItemType === 'dir') {
+            // 「施設別」ディスクのフォルダの名前変更を禁止
+            if (this.firstItemType === 'dir' && this.selectedDisk === '施設別') {
                 return false;
             }
             return !this.multiSelect && this.$store.getters['fm/isEverySelectedItemRW'];
