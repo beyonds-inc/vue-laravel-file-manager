@@ -105,6 +105,14 @@ export default {
             if (window.isViewer !== undefined && window.isViewer === '1') {
                 return false;
             }
+            // 「施設別」ディスク直下のフォルダ（施設名）の名前変更を禁止
+            if (this.firstItemType === 'dir' && this.selectedDisk === '施設別') {
+                const selectedDirectory = this.$store.getters['fm/selectedDirectory'];
+                // selectedDirectoryがnullまたは空の場合、ディスク直下のフォルダ
+                if (!selectedDirectory) {
+                    return false;
+                }
+            }
             return !this.multiSelect && this.$store.getters['fm/isEverySelectedItemRW'];
         },
 
