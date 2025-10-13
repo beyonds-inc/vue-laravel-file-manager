@@ -89,7 +89,7 @@ export default {
          */
         cutRule() {
             // viewer権限の場合は非表示
-            if (window.isViewer !== undefined && window.isViewer) {
+            if (window.isViewer !== undefined && window.isViewer === '1') {
                 return false;
             }
             return this.$store.getters['fm/isEverySelectedItemRW'] && this.selectedItems.every((elem) => elem.type === 'file');
@@ -102,7 +102,7 @@ export default {
          */
         renameRule() {
             // viewer権限の場合は非表示
-            if (window.isViewer !== undefined && window.isViewer) {
+            if (window.isViewer !== undefined && window.isViewer === '1') {
                 return false;
             }
             return !this.multiSelect && this.$store.getters['fm/isEverySelectedItemRW'];
@@ -114,7 +114,7 @@ export default {
          */
         pasteRule() {
             // viewer権限の場合は非表示
-            if (window.isViewer !== undefined && window.isViewer) {
+            if (window.isViewer !== undefined && window.isViewer === '1') {
                 return false;
             }
             // return !!this.$store.state.fm.clipboard.type && this.$store.getters['fm/isEverySelectedItemRW'];
@@ -127,7 +127,7 @@ export default {
          */
         zipRule() {
             // viewer権限の場合は非表示
-            if (window.isViewer !== undefined && window.isViewer) {
+            if (window.isViewer !== undefined && window.isViewer === '1') {
                 return false;
             }
             // return this.selectedDiskDriver === 'local' && this.$store.getters['fm/isEverySelectedItemRW'];
@@ -140,7 +140,7 @@ export default {
          */
         unzipRule() {
             // viewer権限の場合は非表示
-            if (window.isViewer !== undefined && window.isViewer) {
+            if (window.isViewer !== undefined && window.isViewer === '1') {
                 return false;
             }
             // return (
@@ -159,7 +159,7 @@ export default {
          */
         deleteRule() {
             // viewer権限の場合は非表示
-            if (window.isViewer !== undefined && window.isViewer) {
+            if (window.isViewer !== undefined && window.isViewer === '1') {
                 return false;
             }
             // forbid medical users from deleting folders
