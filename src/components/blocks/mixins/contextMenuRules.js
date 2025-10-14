@@ -88,6 +88,10 @@ export default {
          * @returns {boolean}
          */
         cutRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer === '1') {
+                return false;
+            }
             return this.$store.getters['fm/isEverySelectedItemRW'] && this.selectedItems.every((elem) => elem.type === 'file');
             // return false;
         },
@@ -97,6 +101,10 @@ export default {
          * @returns {boolean}
          */
         renameRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer === '1') {
+                return false;
+            }
             // 「施設別」ディスク直下のフォルダ（施設名）の名前変更を禁止
             if (this.firstItemType === 'dir' && this.selectedDisk === '施設別') {
                 const selectedDirectory = this.$store.getters['fm/selectedDirectory'];
@@ -113,6 +121,10 @@ export default {
          * @returns {boolean}
          */
         pasteRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer === '1') {
+                return false;
+            }
             // return !!this.$store.state.fm.clipboard.type && this.$store.getters['fm/isEverySelectedItemRW'];
             return false;
         },
@@ -122,6 +134,10 @@ export default {
          * @returns {boolean}
          */
         zipRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer === '1') {
+                return false;
+            }
             // return this.selectedDiskDriver === 'local' && this.$store.getters['fm/isEverySelectedItemRW'];
             return false;
         },
@@ -131,6 +147,10 @@ export default {
          * @returns {boolean}
          */
         unzipRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer === '1') {
+                return false;
+            }
             // return (
             //     this.selectedDiskDriver === 'local' &&
             //     !this.multiSelect &&
@@ -146,6 +166,10 @@ export default {
          * @returns {boolean}
          */
         deleteRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer === '1') {
+                return false;
+            }
             // forbid medical users from deleting folders
             if (!this.selectedItems.every((elem) => elem.type === 'file') && !window.isEditor) {
                 return false;
