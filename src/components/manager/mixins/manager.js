@@ -223,7 +223,7 @@ export default {
             }
         },
 
-		/**
+	/**
          * Send file to Server
          * @param disk
          * @param path
@@ -232,7 +232,23 @@ export default {
             const formData = new FormData();
             formData.append('file_disk', disk);
             formData.append('file_path', path);
-			
+            
+            // 認証トークンをlocalstorageから取得してAuthorizationヘッダーに設定
+            let token = null;
+            try {
+                const userData = localStorage.getItem('user');
+                if (userData) {
+                    const parsedData = JSON.parse(userData);
+                    token = parsedData.api_token;
+                }
+            } catch (error) {
+                console.error('Failed to parse localStorage user data:', error);
+            }
+            
+            if (token) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            }
+            
             return await axios.post('/api/word-to-pdf/convert', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -240,7 +256,11 @@ export default {
             })
             .then(response => {
                 return response.data; 
-           })
+            })
+            .catch(error => {
+                console.error('API Error:', error);
+                throw error;
+            });
         },
     },
 };
