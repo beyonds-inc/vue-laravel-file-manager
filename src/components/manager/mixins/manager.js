@@ -223,36 +223,22 @@ export default {
             }
         },
 
-	/**
-         * Send file to Server
+        /**
+         * Send file to Server with session authentication
          * @param disk
          * @param path
+         * @returns {Promise} Response data containing converted file info
          */
         async sendFileToServer(disk, path) {
             const formData = new FormData();
             formData.append('file_disk', disk);
             formData.append('file_path', path);
             
-            // 認証トークンをlocalstorageから取得してAuthorizationヘッダーに設定
-            let token = null;
-            try {
-                const userData = localStorage.getItem('user');
-                if (userData) {
-                    const parsedData = JSON.parse(userData);
-                    token = parsedData.api_token;
-                }
-            } catch (error) {
-                console.error('Failed to parse localStorage user data:', error);
-            }
-            
-            if (token) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            }
-            
-            return await axios.post('/api/word-to-pdf/convert', formData, {
+            return await axios.post('/word-to-pdf/convert', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                }
+                },
+                withCredentials: true  // セッション認証のためCookieを含める
             })
             .then(response => {
                 return response.data; 
