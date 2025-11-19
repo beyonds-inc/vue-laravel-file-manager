@@ -231,10 +231,10 @@ export default {
          */
         async sendFileToServer(disk, path) {
             const formData = new FormData();
-            formData.append('file_disk', disk);
-            formData.append('file_path', path);
+            formData.append('disk', disk);
+            formData.append('path', path);
             
-            return await axios.post('/word-to-pdf/convert', formData, {
+            return await axios.post('/file-manager/word-to-pdf/convert', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
