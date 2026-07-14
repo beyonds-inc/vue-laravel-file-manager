@@ -61,6 +61,10 @@ export default {
          * @returns {boolean}
          */
         downloadRule() {
+            // viewer権限の場合は非表示
+            if (window.isViewer !== undefined && window.isViewer === '1') {
+                return false;
+            }
             // return !this.multiSelect && this.firstItemType === 'file';
             // ファイルを複数選択してもダウンロードできるように変更
             return this.selectedItems.every((elem) => elem.type === 'file');
