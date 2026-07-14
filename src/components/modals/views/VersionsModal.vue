@@ -33,6 +33,7 @@
                             <td>{{ version.user_name ? version.user_name : '-' }}</td>
                             <td>
                                 <button
+                                    v-if="!isViewer"
                                     class="btn btn-sm btn-primary"
                                     v-on:click="downloadVersion(version.version_number)"
                                 >
@@ -77,6 +78,14 @@ export default {
          */
         selectedItem() {
             return this.$store.getters['fm/selectedItems'][0];
+        },
+
+        /**
+         * viewer権限かどうか
+         * @returns {boolean}
+         */
+        isViewer() {
+            return window.isViewer !== undefined && window.isViewer === '1';
         },
     },
     methods: {
