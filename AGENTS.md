@@ -7,6 +7,13 @@
 - 既存のADRに影響する変更を行う場合は、該当ADRのステータスを更新すること（deprecated / superseded）。
 - コード変更時は `docs/adr/` 内のADRを参照し、関連する決定事項に準拠した実装を行うこと。
 
+## マイルストーン（Issue / PR で必須）
+
+- Issue と PR は**作成時に必ずマイルストーンを設定する**（未設定のまま作成しない）。beyondS 全リポジトリ共通ルール（2026-09）。
+- 紐づけ先が未確定なら `マイルストーン未定` を設定し、確定後に付け替える。`マイルストーン未定` が無いリポジトリでは先に作成する（`gh api repos/{owner}/{repo}/milestones -f title='マイルストーン未定'`）。
+- PR は関連 Issue と同じマイルストーンにする。
+- `gh` の例: 作成時 `gh issue create -m "<マイルストーン名>"` / `gh pr create -m "<マイルストーン名>"`、後付け `gh issue edit <番号> -m "<マイルストーン名>"` / `gh pr edit <番号> -m "<マイルストーン名>"`。
+
 <!-- ▼▼▼ beyonds-claude-guardrails: ここから AGENTS.md / CLAUDE.md に貼り付け ▼▼▼ -->
 
 ## ガードレール（全 AI エージェント共通の禁止事項）
