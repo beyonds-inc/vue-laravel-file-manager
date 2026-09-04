@@ -17,6 +17,12 @@ export default {
     clearModal(state) {
         state.showModal = false;
         state.modalName = null;
+
+        // release the blob to avoid leaking object URLs across previews
+        if (state.pdfPreviewUrl) {
+            URL.revokeObjectURL(state.pdfPreviewUrl);
+            state.pdfPreviewUrl = null;
+        }
     },
 
     /**
@@ -26,5 +32,14 @@ export default {
      */
     setModalBlockHeight(state, height) {
         state.modalBlockHeight = height;
+    },
+
+    /**
+     * PDF preview - set object URL
+     * @param state
+     * @param url
+     */
+    setPdfPreviewUrl(state, url) {
+        state.pdfPreviewUrl = url;
     },
 };

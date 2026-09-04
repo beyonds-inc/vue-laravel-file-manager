@@ -584,15 +584,15 @@ export default {
      * @param disk
      * @param path
      */
-    openPDF(context, { disk, path }) {
-        const win = window.open();
-
+    openPDF({ commit }, { disk, path }) {
+        // Show the PDF inside the portal instead of opening a new tab (eportal-saas #797).
+        // Opening a tab made the browser fetch the file through the download route, which
+        // recorded a download in the audit trail even though the user only viewed the file.
         GET.getFileArrayBuffer(disk, path).then((response) => {
             const blob = new Blob([response.data], { type: 'application/pdf' });
 
-            win.document.write(
-                `<iframe src="${URL.createObjectURL(blob)}" allowfullscreen height="100%" width="100%"></iframe>`
-            );
+            commit('modal/setPdfPreviewUrl', URL.createObjectURL(blob));
+            commit('modal/setModalState', { modalName: 'PdfPreviewModal', show: true });
         });
     },
 };
