@@ -80,6 +80,7 @@ const ja = {
     },
     delete: {
       noSelected: 'ファイルを選択してください！',
+      deleting: '削除中...',
       title: '削除',
     },
     newFile: {

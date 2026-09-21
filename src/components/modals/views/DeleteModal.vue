@@ -13,9 +13,8 @@
             </div>
         </div>
         <div class="modal-footer">
-            <!-- 削除ボタン連打による重複リクエストを防止するため、処理中はボタンを無効化する（Issue #717） -->
             <button type="button" class="btn btn-danger" v-on:click="deleteItems" v-bind:disabled="deleting">
-                {{ deleting ? lang.modal.delete.deleting || '削除中...' : lang.modal.delete.title }}
+                {{ deleting ? lang.modal.delete.deleting || lang.modal.delete.title : lang.modal.delete.title }}
             </button>
             <button type="button" class="btn btn-light" v-on:click="hideModal" v-bind:disabled="deleting">{{ lang.btn.cancel }}</button>
         </div>
@@ -50,7 +49,6 @@ export default {
          * Delete selected directories and files
          */
         deleteItems() {
-            // 連打防止: 既に削除処理中の場合はリクエストを送信しない（Issue #717）
             if (this.deleting) return;
             this.deleting = true;
 
@@ -62,8 +60,9 @@ export default {
 
             this.$store.dispatch('fm/delete', items).then(() => {
                 this.hideModal();
-            }).catch(() => {
+            }).catch((error) => {
                 this.deleting = false;
+                console.error(error);
             });
         },
     },
