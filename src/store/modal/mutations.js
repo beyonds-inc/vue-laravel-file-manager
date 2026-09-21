@@ -1,3 +1,14 @@
+/**
+ * Revoke the PDF preview object URL, if any
+ * @param state
+ */
+function releasePdfPreviewUrl(state) {
+    if (state.pdfPreviewUrl) {
+        URL.revokeObjectURL(state.pdfPreviewUrl);
+        state.pdfPreviewUrl = null;
+    }
+}
+
 export default {
     /**
      * Modal window state
@@ -8,6 +19,8 @@ export default {
     setModalState(state, { show, modalName }) {
         state.showModal = show;
         state.modalName = modalName;
+
+        if (!show) releasePdfPreviewUrl(state);
     },
 
     /**
@@ -17,6 +30,7 @@ export default {
     clearModal(state) {
         state.showModal = false;
         state.modalName = null;
+        releasePdfPreviewUrl(state);
     },
 
     /**
@@ -26,5 +40,15 @@ export default {
      */
     setModalBlockHeight(state, height) {
         state.modalBlockHeight = height;
+    },
+
+    /**
+     * PDF preview - set object URL
+     * @param state
+     * @param url
+     */
+    setPdfPreviewUrl(state, url) {
+        releasePdfPreviewUrl(state);
+        state.pdfPreviewUrl = url;
     },
 };

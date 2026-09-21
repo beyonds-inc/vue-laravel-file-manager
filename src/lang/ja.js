@@ -147,6 +147,9 @@ const ja = {
     videoPlayer: {
       title: '動画プレーヤー',
     },
+    pdfPreview: {
+      title: 'PDFプレビュー',
+    },
     zip: {
       title: 'アーカイブ生成',
       fieldName: 'アーカイブ名',
