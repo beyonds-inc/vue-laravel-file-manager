@@ -1,3 +1,14 @@
+/**
+ * Revoke the PDF preview object URL, if any
+ * @param state
+ */
+function releasePdfPreviewUrl(state) {
+    if (state.pdfPreviewUrl) {
+        URL.revokeObjectURL(state.pdfPreviewUrl);
+        state.pdfPreviewUrl = null;
+    }
+}
+
 export default {
     /**
      * Modal window state
@@ -8,6 +19,8 @@ export default {
     setModalState(state, { show, modalName }) {
         state.showModal = show;
         state.modalName = modalName;
+
+        if (!show) releasePdfPreviewUrl(state);
     },
 
     /**
@@ -17,12 +30,7 @@ export default {
     clearModal(state) {
         state.showModal = false;
         state.modalName = null;
-
-        // release the blob to avoid leaking object URLs across previews
-        if (state.pdfPreviewUrl) {
-            URL.revokeObjectURL(state.pdfPreviewUrl);
-            state.pdfPreviewUrl = null;
-        }
+        releasePdfPreviewUrl(state);
     },
 
     /**
@@ -40,6 +48,7 @@ export default {
      * @param url
      */
     setPdfPreviewUrl(state, url) {
+        releasePdfPreviewUrl(state);
         state.pdfPreviewUrl = url;
     },
 };

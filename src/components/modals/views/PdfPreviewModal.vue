@@ -8,7 +8,7 @@
             <button type="button" class="btn-close" aria-label="Close" v-on:click="hideModal"></button>
         </div>
         <div class="modal-body p-0">
-            <iframe :src="pdfUrl" allowfullscreen></iframe>
+            <iframe :src="pdfUrl" :title="selectedItem.basename" allowfullscreen></iframe>
         </div>
     </div>
 </template>
