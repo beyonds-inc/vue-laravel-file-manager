@@ -594,6 +594,6 @@ export default {
                 commit('modal/setPdfPreviewUrl', URL.createObjectURL(blob));
                 commit('modal/setModalState', { modalName: 'PdfPreviewModal', show: true });
             })
-            .catch(() => {});
+            .catch((error) => console.error(error));
     },
 };
