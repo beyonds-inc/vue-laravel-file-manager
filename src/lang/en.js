@@ -77,6 +77,7 @@ const en = {
         },
         delete: {
             noSelected: 'Nothing selected!',
+            deleting: 'Deleting...',
             title: 'Delete',
         },
         newFile: {

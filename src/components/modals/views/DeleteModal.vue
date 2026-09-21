@@ -13,8 +13,10 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger" v-on:click="deleteItems">{{ lang.modal.delete.title }}</button>
-            <button type="button" class="btn btn-light" v-on:click="hideModal">{{ lang.btn.cancel }}</button>
+            <button type="button" class="btn btn-danger" v-on:click="deleteItems" v-bind:disabled="deleting">
+                {{ (deleting && lang.modal.delete.deleting) || lang.modal.delete.title }}
+            </button>
+            <button type="button" class="btn btn-light" v-on:click="hideModal" v-bind:disabled="deleting">{{ lang.btn.cancel }}</button>
         </div>
     </div>
 </template>
@@ -28,6 +30,11 @@ export default {
     name: 'DeleteModal',
     mixins: [modal, translate],
     components: { SelectedFileList },
+    data() {
+        return {
+            deleting: false,
+        };
+    },
     computed: {
         /**
          * Files and folders for deleting
@@ -42,6 +49,9 @@ export default {
          * Delete selected directories and files
          */
         deleteItems() {
+            if (this.deleting) return;
+            this.deleting = true;
+
             // create items list for delete
             const items = this.selectedItems.map((item) => ({
                 path: item.path,
@@ -50,6 +60,9 @@ export default {
 
             this.$store.dispatch('fm/delete', items).then(() => {
                 this.hideModal();
+            }).catch((error) => {
+                this.deleting = false;
+                console.error(error);
             });
         },
     },
