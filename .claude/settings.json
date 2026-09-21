@@ -1,0 +1,46 @@
+{
+  "env": {
+    "GUARDRAIL_PROTECTED_BRANCHES": "master dev"
+  },
+  "permissions": {
+    "deny": [
+      "Read(./.env)", "Edit(./.env)", "Write(./.env)",
+      "Read(**/.env)", "Edit(**/.env)", "Write(**/.env)",
+      "Read(./.env.local)", "Edit(./.env.local)", "Write(./.env.local)",
+      "Read(**/.env.local)", "Edit(**/.env.local)", "Write(**/.env.local)",
+      "Read(./.env.*.local)", "Edit(./.env.*.local)", "Write(./.env.*.local)",
+      "Read(./.env.production)", "Edit(./.env.production)", "Write(./.env.production)",
+      "Read(./.env.prod)", "Edit(./.env.prod)", "Write(./.env.prod)",
+      "Read(./.env.staging)", "Edit(./.env.staging)", "Write(./.env.staging)",
+      "Read(./.env.stg)", "Edit(./.env.stg)", "Write(./.env.stg)",
+      "Read(./.env.development)", "Edit(./.env.development)", "Write(./.env.development)",
+      "Read(./.env.dev)", "Edit(./.env.dev)", "Write(./.env.dev)",
+      "Read(./.env.testing)", "Edit(./.env.testing)", "Write(./.env.testing)",
+      "Read(**/*.pem)", "Edit(**/*.pem)", "Write(**/*.pem)",
+      "Read(**/*.key)", "Edit(**/*.key)", "Write(**/*.key)",
+      "Read(**/*.p12)", "Edit(**/*.p12)", "Write(**/*.p12)",
+      "Read(**/*.pfx)", "Edit(**/*.pfx)", "Write(**/*.pfx)",
+      "Read(**/auth.json)", "Edit(**/auth.json)", "Write(**/auth.json)",
+      "Read(**/credentials.json)", "Edit(**/credentials.json)", "Write(**/credentials.json)",
+      "Read(**/*.secret)", "Edit(**/*.secret)", "Write(**/*.secret)",
+      "Read(./secrets/**)", "Edit(./secrets/**)", "Write(./secrets/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.config/gcloud/**)",
+      "Read(~/.config/gcp/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/block-dangerous-bash.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

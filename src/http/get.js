@@ -66,13 +66,19 @@ export default {
     },
 
     /**
-     * Get file - ArrayBuffer
+     * Get file - ArrayBuffer (for in-browser preview / viewing)
+     *
+     * Uses the dedicated `preview-download` endpoint instead of `download`
+     * so that the audit trail can distinguish "閲覧（別タブで開く）" from
+     * "ダウンロード". See beyonds-inc/eportal-saas Issue #785 / PR #786.
+     * Only the openPDF flow (PDF preview and Word→PDF preview) uses this;
+     * the 3-dot menu download keeps using `download`.
      * @param disk
      * @param path
      * @returns {*}
      */
     getFileArrayBuffer(disk, path) {
-        return HTTP.get('download', {
+        return HTTP.get('preview-download', {
             responseType: 'arraybuffer',
             params: { disk, path },
         });

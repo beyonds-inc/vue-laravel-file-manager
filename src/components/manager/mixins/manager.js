@@ -223,24 +223,30 @@ export default {
             }
         },
 
-		/**
-         * Send file to Server
+        /**
+         * Send file to Server with session authentication
          * @param disk
          * @param path
+         * @returns {Promise} Response data containing converted file info
          */
         async sendFileToServer(disk, path) {
             const formData = new FormData();
-            formData.append('file_disk', disk);
-            formData.append('file_path', path);
-			
-            return await axios.post('/api/word-to-pdf/convert', formData, {
+            formData.append('disk', disk);
+            formData.append('path', path);
+            
+            return await axios.post('/file-manager/word-to-pdf/convert', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                }
+                },
+                withCredentials: true  // セッション認証のためCookieを含める
             })
             .then(response => {
                 return response.data; 
-           })
+            })
+            .catch(error => {
+                console.error('API Error:', error);
+                throw error;
+            });
         },
     },
 };

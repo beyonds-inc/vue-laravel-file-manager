@@ -23,7 +23,7 @@
                             <th>{{ lang.modal.versions.version }}</th>
                             <th>{{ lang.modal.versions.date }}</th>
                             <th>{{ lang.modal.versions.user }}</th>
-                            <th>{{ lang.modal.versions.action }}</th>
+                            <th v-if="!isViewer">{{ lang.modal.versions.action }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,7 +31,7 @@
                             <td>{{ version.version_number }}</td>
                             <td>{{ timestampToDate(version.timestamp) }}</td>
                             <td>{{ version.user_name ? version.user_name : '-' }}</td>
-                            <td>
+                            <td v-if="!isViewer">
                                 <button
                                     class="btn btn-sm btn-primary"
                                     v-on:click="downloadVersion(version.version_number)"
@@ -77,6 +77,14 @@ export default {
          */
         selectedItem() {
             return this.$store.getters['fm/selectedItems'][0];
+        },
+
+        /**
+         * viewer権限かどうか
+         * @returns {boolean}
+         */
+        isViewer() {
+            return window.isViewer !== undefined && window.isViewer === '1';
         },
     },
     methods: {
