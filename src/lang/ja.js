@@ -132,7 +132,7 @@ const ja = {
     upload: {
       ifExist: 'ファイルが既に存在する場合:',
       noSelected: 'ファイルを選択してください！',
-      overwrite: '上書きします！',
+      overwrite: '上書きする',
       selected: '選択:',
       size: 'サイズ:',
       skip: 'スキップ',
@@ -146,6 +146,9 @@ const ja = {
     },
     videoPlayer: {
       title: '動画プレーヤー',
+    },
+    pdfPreview: {
+      title: 'PDFプレビュー',
     },
     zip: {
       title: 'アーカイブ生成',

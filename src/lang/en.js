@@ -135,6 +135,9 @@ const en = {
         videoPlayer: {
             title: 'Video player',
         },
+        pdfPreview: {
+            title: 'PDF preview',
+        },
         zip: {
             title: 'Create archive',
             fieldName: 'Archive name',

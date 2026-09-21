@@ -12,6 +12,9 @@ export default {
 
             // main modal block height
             modalBlockHeight: 0,
+
+            // object URL of the PDF blob shown in PdfPreviewModal
+            pdfPreviewUrl: null,
         };
     },
     mutations,
