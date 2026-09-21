@@ -14,7 +14,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger" v-on:click="deleteItems" v-bind:disabled="deleting">
-                {{ deleting ? lang.modal.delete.deleting || lang.modal.delete.title : lang.modal.delete.title }}
+                {{ (deleting && lang.modal.delete.deleting) || lang.modal.delete.title }}
             </button>
             <button type="button" class="btn btn-light" v-on:click="hideModal" v-bind:disabled="deleting">{{ lang.btn.cancel }}</button>
         </div>
