@@ -135,7 +135,7 @@ const ja = {
       overwrite: '上書きする',
       selected: '選択:',
       size: 'サイズ:',
-      skip: 'スキップ',
+      skip: '中止する',
       title: 'ファイルアップロード',
     },
     editor: {
