@@ -51,6 +51,7 @@ export default {
             encodingDetected: true,
             encoding: '',
             loaded: false,
+            isUnmounted: false,
         };
     },
     computed: {
@@ -105,6 +106,10 @@ export default {
     mounted() {
         GET.csvPreview(this.target.disk, this.target.path)
             .then((response) => {
+                if (this.isUnmounted) {
+                    return;
+                }
+
                 // アクセス拒否などは 200 で { result: { status: 'error' } } が返り、interceptor が通知済み
                 if (response.data.result && response.data.result.status === 'error') {
                     this.closeIfStillOpen();
@@ -125,12 +130,15 @@ export default {
                 this.closeIfStillOpen();
             });
     },
+    beforeUnmount() {
+        this.isUnmounted = true;
+    },
     methods: {
         /**
-         * Close this modal only if it is still the open one (the request can end after the user opened another modal)
+         * Close this modal only if it is still shown (the request can end after the user closed it and opened another modal)
          */
         closeIfStillOpen() {
-            if (this.$store.state.fm.modal.modalName === 'CsvPreviewModal') {
+            if (!this.isUnmounted) {
                 this.hideModal();
             }
         },

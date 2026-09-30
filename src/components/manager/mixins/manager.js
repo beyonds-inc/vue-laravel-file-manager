@@ -236,7 +236,8 @@ export default {
 
             POST.officeToPdf(disk, path)
                 .then((response) => {
-                    if (requestId !== latestOfficeRequest) {
+                    // 変換中に別のファイルを開いた場合（CSV のモーダルなど）は、その画面を PDF で置き換えない
+                    if (requestId !== latestOfficeRequest || this.$store.state.fm.modal.showModal) {
                         return;
                     }
 
