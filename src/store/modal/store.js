@@ -15,6 +15,10 @@ export default {
 
             // object URL of the PDF blob shown in PdfPreviewModal
             pdfPreviewUrl: null,
+
+            // file shown in CsvPreviewModal ({ disk, path, basename }). The double-clicked file,
+            // not the first selected item (they differ when several files are selected)
+            csvPreviewTarget: null,
         };
     },
     mutations,
