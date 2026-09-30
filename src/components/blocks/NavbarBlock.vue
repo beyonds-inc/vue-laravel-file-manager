@@ -53,7 +53,7 @@
             </div>
         </div>
         <div v-if="canBatchSign && batchSignActive" class="alert alert-info py-2 mt-3 mb-0 fm-batch-sign-notice">
-            {{ lang.batchSign.notice.replace('{max}', batchSignMaxFiles) }}
+            {{ lang.batchSign.notice }}
         </div>
     </div>
 </template>
@@ -61,7 +61,7 @@
 <script>
 import translate from '../../mixins/translate';
 import EventBus from '../../emitter';
-import { batchSignMaxFiles, canBatchSign } from '../../batchSign';
+import { canBatchSign } from '../../batchSign';
 
 export default {
     name: 'NavbarBlock',
@@ -70,7 +70,6 @@ export default {
         return {
             isEditor: Number(isEditor),
             canBatchSign: canBatchSign(),
-            batchSignMaxFiles: batchSignMaxFiles(),
         };
     },
     computed: {

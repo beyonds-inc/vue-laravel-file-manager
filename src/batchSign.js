@@ -6,8 +6,9 @@
 const DEFAULT_MAX_FILES = 10;
 
 /**
- * 選択モードで表示・選択できるファイルか（未署名の PDF）
- * 署名できるかの最終的な判定（最新版・アップロード者など）は、ePortal の一括署名画面で行う
+ * 選択モードで表示・選択できるファイルか（施設スタッフがアップロードした未署名の PDF）
+ * uploader_role は ePortal の一覧 API が返す、現在の試験でのアップロード者のロール。
+ * 署名欄の有無や PDF を読めるかは一覧では調べず、ePortal の一括署名画面で判定する
  * @param file
  * @returns {boolean}
  */
@@ -15,6 +16,7 @@ export function isBatchSignable(file) {
     return (
         Boolean(file.material_id) &&
         !file.is_signed &&
+        file.uploader_role === 'medical' &&
         typeof file.extension === 'string' &&
         file.extension.toLowerCase() === 'pdf'
     );

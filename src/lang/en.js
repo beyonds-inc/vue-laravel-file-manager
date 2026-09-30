@@ -30,7 +30,7 @@ const en = {
         start: 'Batch sign',
         cancel: 'Cancel',
         submit: 'Sign selected files ({count})',
-        notice: 'Only files you can sign are shown (up to {max} files can be selected)',
+        notice: 'Only unsigned PDF files are shown',
         limit: 'You can sign up to {max} files at once.',
         empty: 'There are no files you can sign in this folder.',
         select: 'Select',
