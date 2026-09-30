@@ -1,3 +1,5 @@
+import { isBatchSignable } from '../batchSign';
+
 export default {
     /**
      * Get a list of disks
@@ -53,5 +55,18 @@ export default {
      */
     isEverySelectedItemRW(state, getters) {
         return getters[`${state.activeManager}/selectedList`].every(item => item.acl === 2);
+    },
+
+    /**
+     * 一括署名で選んでいるファイルの material_id（今のフォルダに表示している順）
+     * 表示していないファイルの ID は含めない
+     * @param state
+     * @param getters
+     * @returns {number[]}
+     */
+    batchSignSelectedIds(state, getters) {
+        return getters[`${state.activeManager}/files`]
+            .filter((file) => isBatchSignable(file) && state.batchSign.selectedIds.includes(file.material_id))
+            .map((file) => file.material_id);
     },
 };

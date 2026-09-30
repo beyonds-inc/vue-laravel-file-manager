@@ -3,6 +3,9 @@
         <table class="table table-sm">
             <thead>
                 <tr>
+                    <th v-if="batchSignActive" class="table-check w-5 text-center">
+                        {{ lang.batchSign.select }}
+                    </th>
                     <th class="table-name w-40" v-on:click="sortBy('name')">
                         {{ lang.manager.table.name }}
                         <template v-if="sortSettings.field === 'name'">
@@ -38,13 +41,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="!isRootPath">
+                <tr v-if="!isRootPath && !batchSignActive">
                     <td colspan="4" class="fm-content-item" v-on:click="levelUp">
                         <i class="bi bi-arrow-90deg-up" />
                     </td>
                 </tr>
                 <tr
-                    v-for="(directory, index) in directories"
+                    v-for="(directory, index) in listedDirectories"
                     v-bind:key="`d-${index}`"
                     v-bind:class="{ 'table-info': checkSelect('directories', directory.path) }"
                     v-on:click="selectItem('directories', directory.path, $event)"
@@ -77,7 +80,7 @@
                     </td>
                 </tr>
                 <tr
-                    v-for="(file, index) in files"
+                    v-for="(file, index) in listedFiles"
                     v-bind:key="`f-${index}`"
                     v-bind:class="{ 'table-info': checkSelect('files', file.path) }"
                     v-on:click="selectItem('files', file.path, $event)"
@@ -86,6 +89,20 @@
                     v-on:contextmenu.prevent="contextMenu(file, $event)"
                     style="position: relative;"
                 >
+                    <td
+                        v-if="batchSignActive"
+                        class="text-center fm-batch-sign-check"
+                        v-on:click.stop
+                        v-on:dblclick.stop
+                    >
+                        <input
+                            type="checkbox"
+                            class="form-check-input"
+                            v-bind:checked="batchSignSelectedIds.includes(file.material_id)"
+                            v-bind:aria-label="`${lang.batchSign.select}: ${file.basename}`"
+                            v-on:change="toggleBatchSignItem(file, $event)"
+                        />
+                    </td>
                     <td
                         class="fm-content-item unselectable"
                         v-bind:class="acl && file.acl === 0 ? 'text-hidden' : ''"
@@ -144,6 +161,9 @@
                         </button>
                     </td>
                 </tr>
+                <tr v-if="batchSignActive && !listedFiles.length">
+                    <td colspan="7" class="text-muted">{{ lang.batchSign.empty }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -153,6 +173,8 @@
 import translate from '../../mixins/translate';
 import helper from '../../mixins/helper';
 import managerHelper from './mixins/manager';
+import EventBus from '../../emitter';
+import { batchSignMaxFiles, isBatchSignable } from '../../batchSign';
 
 export default {
     name: 'table-view',
@@ -186,8 +208,63 @@ export default {
         selectedDisk() {
             return this.$store.getters['fm/selectedDisk'];
         },
+
+        /**
+         * 一括署名の選択モード中か
+         * @returns {boolean}
+         */
+        batchSignActive() {
+            return this.$store.state.fm.batchSign.active;
+        },
+
+        /**
+         * 一括署名で選んでいるファイルの material_id
+         * @returns {number[]}
+         */
+        batchSignSelectedIds() {
+            return this.$store.getters['fm/batchSignSelectedIds'];
+        },
+
+        /**
+         * 一覧に出すファイル。選択モード中は、署名できるファイル（未署名の PDF）だけ
+         * @returns {*}
+         */
+        listedFiles() {
+            return this.batchSignActive ? this.files.filter(isBatchSignable) : this.files;
+        },
+
+        /**
+         * 一覧に出すフォルダ。選択モード中は出さない
+         * @returns {*}
+         */
+        listedDirectories() {
+            return this.batchSignActive ? [] : this.directories;
+        },
     },
     methods: {
+        /**
+         * 一括署名で選ぶファイルを付け外しする。上限を超えて選ぼうとしたときは選ばずに知らせる
+         * @param file
+         * @param event
+         */
+        toggleBatchSignItem(file, event) {
+            const max = batchSignMaxFiles();
+            const selecting = !this.batchSignSelectedIds.includes(file.material_id);
+
+            if (selecting && this.batchSignSelectedIds.length >= max) {
+                // 表示は store から変わらないため、チェックを外した状態に戻す
+                const checkbox = event.target;
+                checkbox.checked = false;
+                EventBus.emit('addNotification', {
+                    status: 'error',
+                    message: this.lang.batchSign.limit.replace('{max}', max),
+                });
+                return;
+            }
+
+            this.$store.commit('fm/toggleBatchSignItem', file.material_id);
+        },
+
         /**
          * 現在hoverしているファイルのsourceを取得する。
          * @param file

@@ -25,4 +25,10 @@ export default {
 
     // full screen mode
     fullScreen: false,
+
+    // 一括署名の選択モード（eportal-saas #821）。selectedIds は選んだファイルの material_id
+    batchSign: {
+        active: false,
+        selectedIds: [],
+    },
 };
