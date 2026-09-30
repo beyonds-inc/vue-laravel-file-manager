@@ -154,7 +154,7 @@ const ja = {
     csvPreview: {
       title: 'CSVプレビュー',
       truncated: '途中までの表示です（先頭の {count} 行を表示しています）。',
-      encodingGuessed: '文字コードを判定できなかったため、Shift_JIS として表示しています。文字化けしている場合があります。',
+      encodingGuessed: '文字コードを判定できなかったため、{encoding} として表示しています。文字化けしている場合があります。',
       empty: '表示できる行がありません。',
     },
     zip: {

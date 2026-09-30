@@ -6,6 +6,9 @@ import POST from '../../../http/post';
 // PowerPoint も送り、表示できない理由（この形式のファイルは表示できません。）をサーバーから受け取って表示する
 const OFFICE_PDF_EXTENSIONS = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
 
+// 変換中に別のファイルを開いた場合、遅れて返った前の結果で画面を上書きしないための番号
+let latestOfficeRequest = 0;
+
 export default {
     computed: {
         /**
@@ -209,6 +212,11 @@ export default {
                 this.openOfficeAsPdf(this.selectedDisk, path);
             } else if (extension.toLowerCase() === 'csv') {
                 // show CSV as a read-only table
+                this.$store.commit('fm/modal/setCsvPreviewTarget', {
+                    disk: this.selectedDisk,
+                    path,
+                    basename: path.split('/').pop(),
+                });
                 this.$store.commit('fm/modal/setModalState', {
                     modalName: 'CsvPreviewModal',
                     show: true,
@@ -217,13 +225,26 @@ export default {
         },
 
         /**
-         * Convert Word / Excel to PDF on the server and show it in the PDF preview
+         * Convert Word / Excel (and PowerPoint, to show why it cannot be shown) to PDF on the server
+         * and show it in the PDF preview
          * @param disk
          * @param path
          */
         openOfficeAsPdf(disk, path) {
+            latestOfficeRequest += 1;
+            const requestId = latestOfficeRequest;
+
             POST.officeToPdf(disk, path)
                 .then((response) => {
+                    if (requestId !== latestOfficeRequest) {
+                        return;
+                    }
+
+                    // アクセス拒否などは 200 で { result: { status: 'error' } } が返り、interceptor が通知済み
+                    if (response.data && response.data.result && response.data.result.status === 'error') {
+                        return;
+                    }
+
                     const [pdfDisk, pdfPath] = Array.isArray(response.data) ? response.data : [];
 
                     if (!pdfDisk || !pdfPath) {
@@ -240,7 +261,11 @@ export default {
                     });
                 })
                 // 失敗の理由（サイズ超過・変換失敗・時間切れ・形式対象外）は response interceptor が通知する
-                .catch(() => {});
+                .catch((error) => {
+                    if (!error.response) {
+                        console.error(error);
+                    }
+                });
         },
     },
 };

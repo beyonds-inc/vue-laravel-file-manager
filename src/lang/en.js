@@ -142,7 +142,7 @@ const en = {
         csvPreview: {
             title: 'CSV preview',
             truncated: 'Only part of the file is shown (the first {count} rows).',
-            encodingGuessed: 'The character encoding could not be detected, so the file is shown as Shift_JIS. Characters may be garbled.',
+            encodingGuessed: 'The character encoding could not be detected, so the file is shown as {encoding}. Characters may be garbled.',
             empty: 'There are no rows to show.',
         },
         zip: {

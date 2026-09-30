@@ -51,4 +51,13 @@ export default {
         releasePdfPreviewUrl(state);
         state.pdfPreviewUrl = url;
     },
+
+    /**
+     * CSV preview - set the file to show
+     * @param state
+     * @param target { disk, path, basename }
+     */
+    setCsvPreviewTarget(state, target) {
+        state.csvPreviewTarget = target;
+    },
 };

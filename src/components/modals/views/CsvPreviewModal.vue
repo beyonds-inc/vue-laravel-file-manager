@@ -3,7 +3,7 @@
         <div class="modal-header">
             <h5 class="modal-title w-75 text-truncate">
                 {{ lang.modal.csvPreview.title }}
-                <small class="text-muted ps-3">{{ selectedItem.basename }}</small>
+                <small class="text-muted ps-3">{{ target.basename }}</small>
             </h5>
             <button type="button" class="btn-close" aria-label="Close" v-on:click="hideModal"></button>
         </div>
@@ -12,7 +12,7 @@
                 {{ truncatedMessage }}
             </div>
             <div v-if="!encodingDetected" class="alert alert-warning py-2" role="alert">
-                {{ lang.modal.csvPreview.encodingGuessed }}
+                {{ encodingGuessedMessage }}
             </div>
             <p v-if="loaded && rows.length === 0" class="text-muted mb-0">{{ lang.modal.csvPreview.empty }}</p>
             <div v-if="rows.length > 0" class="fm-csv-table">
@@ -38,6 +38,9 @@ import modal from '../mixins/modal';
 import translate from '../../../mixins/translate';
 import GET from '../../../http/get';
 
+// サーバーが返す mbstring の文字コード名を、画面に出す名前にする
+const ENCODING_LABELS = { 'SJIS-win': 'Shift_JIS', 'eucJP-win': 'EUC-JP' };
+
 export default {
     name: 'CsvPreviewModal',
     mixins: [modal, translate],
@@ -46,24 +49,17 @@ export default {
             rows: [],
             truncated: false,
             encodingDetected: true,
+            encoding: '',
             loaded: false,
         };
     },
     computed: {
         /**
-         * Selected disk
+         * The double-clicked file ({ disk, path, basename })
          * @returns {*}
          */
-        selectedDisk() {
-            return this.$store.getters['fm/selectedDisk'];
-        },
-
-        /**
-         * Selected file
-         * @returns {*}
-         */
-        selectedItem() {
-            return this.$store.getters['fm/selectedItems'][0];
+        target() {
+            return this.$store.state.fm.modal.csvPreviewTarget || { disk: '', path: '', basename: '' };
         },
 
         /**
@@ -95,19 +91,50 @@ export default {
         truncatedMessage() {
             return this.lang.modal.csvPreview.truncated.replace('{count}', this.rows.length);
         },
+
+        /**
+         * @returns {string}
+         */
+        encodingGuessedMessage() {
+            return this.lang.modal.csvPreview.encodingGuessed.replace(
+                '{encoding}',
+                ENCODING_LABELS[this.encoding] || this.encoding
+            );
+        },
     },
     mounted() {
-        GET.csvPreview(this.selectedDisk, this.selectedItem.path)
+        GET.csvPreview(this.target.disk, this.target.path)
             .then((response) => {
+                // アクセス拒否などは 200 で { result: { status: 'error' } } が返り、interceptor が通知済み
+                if (response.data.result && response.data.result.status === 'error') {
+                    this.closeIfStillOpen();
+                    return;
+                }
+
                 this.rows = Array.isArray(response.data.rows) ? response.data.rows : [];
                 this.truncated = response.data.truncated === true;
                 this.encodingDetected = response.data.encoding_detected !== false;
+                this.encoding = response.data.encoding || '';
                 this.loaded = true;
             })
             // 表示できない理由は response interceptor が通知するので、空のモーダルは閉じる
-            .catch(() => this.hideModal());
+            .catch((error) => {
+                if (!error.response) {
+                    console.error(error);
+                }
+                this.closeIfStillOpen();
+            });
     },
     methods: {
+        /**
+         * Close this modal only if it is still the open one (the request can end after the user opened another modal)
+         */
+        closeIfStillOpen() {
+            if (this.$store.state.fm.modal.modalName === 'CsvPreviewModal') {
+                this.hideModal();
+            }
+        },
+
         /**
          * Make every row as wide as the widest row. Cells are shown as text (never as HTML).
          * @param row
