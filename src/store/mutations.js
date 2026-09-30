@@ -77,6 +77,39 @@ export default {
     },
 
     /**
+     * 一括署名の選択モードを切り替える（選択は毎回空から始める）
+     * @param state
+     * @param active
+     */
+    setBatchSignMode(state, active) {
+        state.batchSign.active = active;
+        state.batchSign.selectedIds = [];
+    },
+
+    /**
+     * 一括署名で選ぶファイルを付け外しする
+     * @param state
+     * @param materialId
+     */
+    toggleBatchSignItem(state, materialId) {
+        const index = state.batchSign.selectedIds.indexOf(materialId);
+
+        if (index === -1) {
+            state.batchSign.selectedIds.push(materialId);
+        } else {
+            state.batchSign.selectedIds.splice(index, 1);
+        }
+    },
+
+    /**
+     * 一括署名で選んだファイルを空にする（別のフォルダを開いたとき。一括署名は同じフォルダのファイルだけのため）
+     * @param state
+     */
+    clearBatchSignSelection(state) {
+        state.batchSign.selectedIds = [];
+    },
+
+    /**
      * Reset state
      * @param state
      */
@@ -91,5 +124,9 @@ export default {
         state.disks = [];
         state.fileCallback = null;
         state.fullScreen = false;
+        state.batchSign = {
+            active: false,
+            selectedIds: [],
+        };
     },
 };

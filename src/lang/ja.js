@@ -26,6 +26,16 @@ const ja = {
     hidden: ' 隠しファイル',
     save: '保存',
   },
+  batchSign: {
+    start: '一括署名',
+    cancel: '解除',
+    submit: '選択したファイルに署名（{count}件）',
+    notice: '未署名の PDF のみを表示しています',
+    limit: '一括署名は一度に{max}件までです。',
+    empty: 'このフォルダには、署名できるファイルがありません。',
+    select: '選択',
+    urlError: '一括署名画面を開けませんでした。',
+  },
   clipboard: {
     actionType: 'タイプ',
     copy: 'コピー',

@@ -26,6 +26,16 @@ const en = {
         hidden: ' Hidden files',
         save: 'Save',
     },
+    batchSign: {
+        start: 'Batch sign',
+        cancel: 'Cancel',
+        submit: 'Sign selected files ({count})',
+        notice: 'Only unsigned PDF files are shown',
+        limit: 'You can sign up to {max} files at once.',
+        empty: 'There are no files you can sign in this folder.',
+        select: 'Select',
+        urlError: 'Could not open the batch signing page.',
+    },
     clipboard: {
         actionType: 'Type',
         copy: 'Copy',

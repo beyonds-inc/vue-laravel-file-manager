@@ -3,7 +3,8 @@
         <disk-list v-bind:manager="manager" />
         <bread-crumb v-bind:manager="manager" />
         <div class="fm-content-body">
-            <table-view v-if="viewType === 'table'" v-bind:manager="manager" />
+            <!-- 一括署名の選択モードはテーブル表示でだけ行う -->
+            <table-view v-if="viewType === 'table' || batchSignActive" v-bind:manager="manager" />
             <grid-view v-else v-bind:manager="manager" />
         </div>
     </div>
@@ -34,6 +35,14 @@ export default {
          */
         viewType() {
             return this.$store.state.fm[this.manager].viewType;
+        },
+
+        /**
+         * 一括署名の選択モード中か
+         * @returns {boolean}
+         */
+        batchSignActive() {
+            return this.$store.state.fm.batchSign.active;
         },
     },
 };
