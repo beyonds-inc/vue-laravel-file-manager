@@ -88,7 +88,7 @@ export default {
     /**
      * Convert Word / Excel to PDF for the in-portal preview (eportal-saas #824).
      * PowerPoint is sent as well so that the server tells why it cannot be shown.
-     * The reason of a failure (unsupported type, size, timeout) is shown by the response interceptor.
+     * The reason of a failure is shown by the response interceptor.
      * @param disk
      * @param path
      * @returns {*}

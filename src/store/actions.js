@@ -584,11 +584,16 @@ export default {
      * @param disk
      * @param path
      */
-    openPDF({ commit }, { disk, path }) {
+    openPDF({ commit }, { disk, path, isCurrent }) {
         // Show the PDF in a modal inside the portal instead of a new tab (eportal-saas #797).
         // The file is fetched via the preview-download endpoint (see GET.getFileArrayBuffer).
         GET.getFileArrayBuffer(disk, path)
             .then((response) => {
+                // 取得中に別のファイルを開いた場合は、その画面をこの PDF で置き換えない（eportal-saas #824）
+                if (isCurrent && !isCurrent()) {
+                    return;
+                }
+
                 const blob = new Blob([response.data], { type: 'application/pdf' });
 
                 commit('modal/setPdfPreviewUrl', URL.createObjectURL(blob));

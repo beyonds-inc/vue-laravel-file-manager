@@ -37,6 +37,7 @@
 import modal from '../mixins/modal';
 import translate from '../../../mixins/translate';
 import GET from '../../../http/get';
+import EventBus from '../../../emitter';
 
 // サーバーが返す mbstring の文字コード名を、画面に出す名前にする
 const ENCODING_LABELS = { 'SJIS-win': 'Shift_JIS', 'eucJP-win': 'EUC-JP' };
@@ -116,7 +117,17 @@ export default {
                     return;
                 }
 
-                this.rows = Array.isArray(response.data.rows) ? response.data.rows : [];
+                // 想定した形でない応答（施設選択画面の HTML など）は、空の表と取り違えないよう閉じる
+                if (!Array.isArray(response.data.rows)) {
+                    EventBus.emit('addNotification', {
+                        status: 'error',
+                        message: this.lang.response.pdfError,
+                    });
+                    this.closeIfStillOpen();
+                    return;
+                }
+
+                this.rows = response.data.rows;
                 this.truncated = response.data.truncated === true;
                 this.encodingDetected = response.data.encoding_detected !== false;
                 this.encoding = response.data.encoding || '';
@@ -144,7 +155,7 @@ export default {
         },
 
         /**
-         * Make every row as wide as the widest row. Cells are shown as text (never as HTML).
+         * Make every row as wide as the widest row
          * @param row
          * @returns {string[]}
          */

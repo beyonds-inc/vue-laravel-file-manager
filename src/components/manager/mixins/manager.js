@@ -6,8 +6,9 @@ import POST from '../../../http/post';
 // PowerPoint も送り、表示できない理由（この形式のファイルは表示できません。）をサーバーから受け取って表示する
 const OFFICE_PDF_EXTENSIONS = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
 
-// 変換中に別のファイルを開いた場合、遅れて返った前の結果で画面を上書きしないための番号
-let latestOfficeRequest = 0;
+// PDF・Word・Excel を開いた順の番号。変換中・PDF の取得中に別のファイルを開いた場合、
+// 遅れて返った前の結果で画面を上書きしないために使う
+let latestPreviewRequest = 0;
 
 export default {
     computed: {
@@ -203,12 +204,16 @@ export default {
                 });
             } else if (extension.toLowerCase() === 'pdf') {
                 // show pdf document
+                latestPreviewRequest += 1;
+                const requestId = latestPreviewRequest;
+
                 this.$store.dispatch('fm/openPDF', {
                     disk: this.selectedDisk,
                     path,
+                    isCurrent: () => this.isLatestPreview(requestId),
                 });
             } else if (OFFICE_PDF_EXTENSIONS.includes(extension.toLowerCase())) {
-                // show Word / Excel in PDF
+                // show Word / Excel in PDF (PowerPoint: show why it cannot be shown)
                 this.openOfficeAsPdf(this.selectedDisk, path);
             } else if (extension.toLowerCase() === 'csv') {
                 // show CSV as a read-only table
@@ -231,13 +236,13 @@ export default {
          * @param path
          */
         openOfficeAsPdf(disk, path) {
-            latestOfficeRequest += 1;
-            const requestId = latestOfficeRequest;
+            latestPreviewRequest += 1;
+            const requestId = latestPreviewRequest;
 
             POST.officeToPdf(disk, path)
                 .then((response) => {
                     // 変換中に別のファイルを開いた場合（CSV のモーダルなど）は、その画面を PDF で置き換えない
-                    if (requestId !== latestOfficeRequest || this.$store.state.fm.modal.showModal) {
+                    if (!this.isLatestPreview(requestId)) {
                         return;
                     }
 
@@ -259,14 +264,24 @@ export default {
                     this.$store.dispatch('fm/openPDF', {
                         disk: pdfDisk,
                         path: pdfPath,
+                        isCurrent: () => this.isLatestPreview(requestId),
                     });
                 })
-                // 失敗の理由（サイズ超過・変換失敗・時間切れ・形式対象外）は response interceptor が通知する
+                // 失敗の理由は response interceptor が通知する
                 .catch((error) => {
                     if (!error.response) {
                         console.error(error);
                     }
                 });
+        },
+
+        /**
+         * 最後に開いたファイルの結果で、ほかの画面（CSV のモーダルなど）も開いていないか
+         * @param requestId
+         * @returns {boolean}
+         */
+        isLatestPreview(requestId) {
+            return requestId === latestPreviewRequest && !this.$store.state.fm.modal.showModal;
         },
     },
 };
