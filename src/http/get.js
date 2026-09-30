@@ -122,4 +122,14 @@ export default {
             params: { disk, path },
         });
     },
+
+    /**
+     * CSV preview - rows for the read-only table view (eportal-saas #824)
+     * @param disk
+     * @param path
+     * @returns {*}
+     */
+    csvPreview(disk, path) {
+        return HTTP.get('csv-preview', { params: { disk, path } });
+    },
 };
