@@ -1,6 +1,10 @@
 // Event bus
 import EventBus from '../../../emitter';
-import axios from 'axios';
+import POST from '../../../http/post';
+
+// PDF に変換して表示する形式（eportal-saas #824）。
+// PowerPoint も送り、表示できない理由（この形式のファイルは表示できません。）をサーバーから受け取って表示する
+const OFFICE_PDF_EXTENSIONS = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
 
 export default {
     computed: {
@@ -200,53 +204,43 @@ export default {
                     disk: this.selectedDisk,
                     path,
                 });
-            } else if (extension.toLowerCase() === 'docx' || extension.toLowerCase() === 'doc') {
-                // show word in PDF
-				var disk = this.selectedDisk;
-                this.sendFileToServer(disk,path)
-                    .then(fileInfo => {
-                        if (fileInfo.length == 0) {
-                            EventBus.emit('addNotification', {
-                                status: 'error',
-                                message: this.lang.response.pdfError,
-                            });
-                            return;
-                        }
-                        this.$store.dispatch('fm/openPDF', {
-                            disk: fileInfo[0],
-                            path: fileInfo[1],
-                        });
-                    })
-                    .catch(error => {
-                        console.error('処理中にエラーが発生しました:', error);
-                    });	
+            } else if (OFFICE_PDF_EXTENSIONS.includes(extension.toLowerCase())) {
+                // show Word / Excel in PDF
+                this.openOfficeAsPdf(this.selectedDisk, path);
+            } else if (extension.toLowerCase() === 'csv') {
+                // show CSV as a read-only table
+                this.$store.commit('fm/modal/setModalState', {
+                    modalName: 'CsvPreviewModal',
+                    show: true,
+                });
             }
         },
 
         /**
-         * Send file to Server with session authentication
+         * Convert Word / Excel to PDF on the server and show it in the PDF preview
          * @param disk
          * @param path
-         * @returns {Promise} Response data containing converted file info
          */
-        async sendFileToServer(disk, path) {
-            const formData = new FormData();
-            formData.append('disk', disk);
-            formData.append('path', path);
-            
-            return await axios.post('/file-manager/word-to-pdf/convert', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
-                withCredentials: true  // セッション認証のためCookieを含める
-            })
-            .then(response => {
-                return response.data; 
-            })
-            .catch(error => {
-                console.error('API Error:', error);
-                throw error;
-            });
+        openOfficeAsPdf(disk, path) {
+            POST.officeToPdf(disk, path)
+                .then((response) => {
+                    const [pdfDisk, pdfPath] = Array.isArray(response.data) ? response.data : [];
+
+                    if (!pdfDisk || !pdfPath) {
+                        EventBus.emit('addNotification', {
+                            status: 'error',
+                            message: this.lang.response.pdfError,
+                        });
+                        return;
+                    }
+
+                    this.$store.dispatch('fm/openPDF', {
+                        disk: pdfDisk,
+                        path: pdfPath,
+                    });
+                })
+                // 失敗の理由（サイズ超過・変換失敗・時間切れ・形式対象外）は response interceptor が通知する
+                .catch(() => {});
         },
     },
 };

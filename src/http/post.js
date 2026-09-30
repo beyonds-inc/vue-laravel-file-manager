@@ -84,4 +84,19 @@ export default {
     unzip(data) {
         return HTTP.post('unzip', data);
     },
+
+    /**
+     * Convert Word / Excel to PDF for the in-portal preview (eportal-saas #824)
+     * The reason of a failure (unsupported type, size, timeout) is shown by the response interceptor.
+     * @param disk
+     * @param path
+     * @returns {*}
+     */
+    officeToPdf(disk, path) {
+        const formData = new FormData();
+        formData.append('disk', disk);
+        formData.append('path', path);
+
+        return HTTP.post('word-to-pdf/convert', formData);
+    },
 };
