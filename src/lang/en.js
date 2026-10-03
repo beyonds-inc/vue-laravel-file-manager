@@ -148,6 +148,12 @@ const en = {
         },
         pdfPreview: {
             title: 'PDF preview',
+            pages: '{count} pages',
+            zoomIn: 'Zoom in',
+            zoomOut: 'Zoom out',
+            fitWidth: 'Fit width',
+            loading: 'Loading…',
+            error: 'The PDF could not be shown.',
         },
         csvPreview: {
             title: 'CSV preview',
