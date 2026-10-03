@@ -23,7 +23,7 @@ docs/adr/
 
 ### Frontend
 
-（今後追加予定）
+- [ADR frontend/0001: PDF プレビューをブラウザの PDF ビューアーではなく pdf.js で描く](frontend/0001-render-pdf-preview-with-pdfjs.md)（proposed）
 
 ### Infrastructure
 

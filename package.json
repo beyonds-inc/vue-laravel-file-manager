@@ -22,6 +22,7 @@
     "codemirror-editor-vue3": "2.1.7",
     "cropperjs": "1.5.12",
     "mitt": "3.0.0",
+    "pdfjs-dist": "4.10.38",
     "plyr": "3.7.2",
     "vue": "3.2.37",
     "vuex": "4.0.2"

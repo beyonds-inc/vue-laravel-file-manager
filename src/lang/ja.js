@@ -160,6 +160,12 @@ const ja = {
     },
     pdfPreview: {
       title: 'PDFプレビュー',
+      pages: '全 {count} ページ',
+      zoomIn: '拡大',
+      zoomOut: '縮小',
+      fitWidth: '幅に合わせる',
+      loading: '読み込み中です…',
+      error: 'PDF を表示できませんでした。',
     },
     csvPreview: {
       title: 'CSVプレビュー',
