@@ -165,7 +165,10 @@ const ja = {
       zoomOut: '縮小',
       fitWidth: '幅に合わせる',
       loading: '読み込み中です…',
-      error: 'PDF を表示できませんでした。',
+      error: 'PDF を表示できませんでした。ページを再読み込みしてから、もう一度開いてください。',
+      errorPassword: 'パスワードが設定された PDF は表示できません。',
+      errorInvalid: 'PDF ファイルが壊れているため、表示できませんでした。',
+      pageError: 'このページを表示できませんでした。',
     },
     csvPreview: {
       title: 'CSVプレビュー',

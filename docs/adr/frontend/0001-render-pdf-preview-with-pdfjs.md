@@ -74,7 +74,7 @@ PDF プレビュー（eportal-saas #797。Word・Excel を変換した PDF も #
 
 - `pdfjs-dist` は版を固定する（package.json の他の依存と同じ）。古いブラウザでも動くよう `legacy` のビルドを使う
 - pdf.js の worker と文字のデータ（CMap・標準フォント）は file-manager.js に含めず、ePortal の `laravel/public/vendor/file-manager/pdfjs/<版>/` に置く。資料一覧を開くたびに読み込む量を増やさないため。worker は pdf.js 本体と版がそろっていないと動かないので、版ごとのフォルダにする。場所は ePortal の blade が `fmPdfjsAssetsUrl` で渡す
-- 3.x は任意のコードを実行できる脆弱性（CVE-2024-4367、4.2.67 で修正）があるため、4.2.67 以上を使う。あわせて `isEvalSupported: false` を指定する
+- 4.1.392 以下は任意のコードを実行できる脆弱性（CVE-2024-4367、4.2.67 で修正）があるため、4.2.67 以上を使う。あわせて `isEvalSupported: false` を指定する
 - ePortal は file-manager.js を module ではない `<script>` で読み込むため、bundle に `import.meta` を残さない（pdf.js が Node.js のときだけ使う `import.meta.url` を `vite.config.js` の `define` で置き換える）
 - canvas の右クリックメニューは出さない（画像として保存させない）
 - ページは見えるところだけ描く（大きな PDF でも重くならないように）

@@ -153,7 +153,10 @@ const en = {
             zoomOut: 'Zoom out',
             fitWidth: 'Fit width',
             loading: 'Loading…',
-            error: 'The PDF could not be shown.',
+            error: 'The PDF could not be shown. Reload the page and open it again.',
+            errorPassword: 'PDF files protected by a password cannot be shown.',
+            errorInvalid: 'The PDF could not be shown because the file is damaged.',
+            pageError: 'This page could not be shown.',
         },
         csvPreview: {
             title: 'CSV preview',

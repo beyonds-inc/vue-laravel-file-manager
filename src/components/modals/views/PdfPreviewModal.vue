@@ -1,7 +1,7 @@
 <template>
     <div class="modal-content fm-modal-pdf-preview">
         <div class="modal-header">
-            <h5 class="modal-title w-50 text-truncate">
+            <h5 class="modal-title w-75 text-truncate">
                 {{ lang.modal.pdfPreview.title }}
                 <small class="text-muted ps-3">{{ selectedItem.basename }}</small>
             </h5>
@@ -44,7 +44,7 @@
         <!-- ブラウザの PDF ビューアーは使わない。保存・印刷のボタンが出て、閲覧者でもダウンロードできてしまうため (eportal-saas #824) -->
         <div class="modal-body p-0 fm-pdf-pages" ref="pages" v-on:contextmenu.prevent>
             <p v-if="status === 'loading'" class="fm-pdf-message">{{ lang.modal.pdfPreview.loading }}</p>
-            <p v-else-if="status === 'error'" class="fm-pdf-message">{{ lang.modal.pdfPreview.error }}</p>
+            <p v-else-if="status === 'error'" class="fm-pdf-message">{{ lang.modal.pdfPreview[errorKey] }}</p>
             <div
                 v-for="page in pages"
                 v-bind:key="page.number"
@@ -53,6 +53,7 @@
                 v-bind:style="{ width: `${page.width}px`, height: `${page.height}px` }"
             >
                 <canvas></canvas>
+                <p v-if="page.failed" class="fm-pdf-page-error">{{ lang.modal.pdfPreview.pageError }}</p>
             </div>
         </div>
     </div>
@@ -70,9 +71,18 @@ const PDF_TO_CSS_UNITS = 96 / 72;
 const MAX_AUTO_SCALE = 1.25;
 // 前後の何 px 分のページまで先に描くか。これより離れたページは描いた中身を捨てる
 const RENDER_MARGIN = '600px 0px';
-// 1 つの canvas の画素数の上限。超えると iPad の Safari などで真っ白になるため、解像度を下げて描く
-// （pdf.js のビューアーと同じ値）
-const MAX_CANVAS_PIXELS = 2 ** 24;
+// 1 つの canvas の画素数の上限。超えるときは解像度を下げて描く。
+// canvas は 1 画素 4 バイトのメモリを使うため、2^24 画素（64MB）に抑える（pdf.js のビューアーの既定 2^25 の半分）。
+// iOS・Android は canvas のメモリの上限が小さく、超えると真っ白になるため、pdf.js のビューアーと同じく 5242880 画素にする
+const IS_MOBILE =
+    /Android/.test(navigator.userAgent) ||
+    /\b(iPad|iPhone|iPod)(?=;)/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const MAX_CANVAS_PIXELS = IS_MOBILE ? 5242880 : 2 ** 24;
+// 日本語のフォントを埋め込んでいない PDF で使う CMap。ePortal に置き忘れても pdf.js はエラーにせず、
+// その文字だけ抜けたページを描くため、最初に開くときにあるか確かめる
+const CHECK_CMAP = 'UniJIS-UCS2-H.bcmap';
+let cMapChecked = false;
 
 /**
  * pdf.js の worker と文字の形のデータ（CMap・標準フォント）を置いた場所。
@@ -87,6 +97,22 @@ function assetsUrl() {
     return `${url.endsWith('/') ? url : `${url}/`}${pdfjsVersion}/`;
 }
 
+/**
+ * 読み込めなかった理由に合わせた文言のキー
+ * @param error
+ * @returns {string}
+ */
+function errorKeyOf(error) {
+    if (error && error.name === 'PasswordException') {
+        return 'errorPassword';
+    }
+    if (error && error.name === 'InvalidPDFException') {
+        return 'errorInvalid';
+    }
+
+    return 'error';
+}
+
 export default {
     name: 'PdfPreviewModal',
     mixins: [modal, translate],
@@ -96,6 +122,7 @@ export default {
             pageCount: 0,
             pages: [],
             scale: 1,
+            errorKey: 'error',
             MIN_SCALE: 0.25,
             MAX_SCALE: 4,
             ZOOM_STEP: 1.25,
@@ -129,6 +156,7 @@ export default {
         this.pageSizes = [];
         this.renderTasks = new Map();
         this.renderedScale = new Map();
+        this.loadedPages = new Map();
         this.observer = null;
         this.loadingTask = null;
         // 読み込みの番号。閉じたり別の PDF に変わったりしたら進め、前の読み込みの結果を捨てる
@@ -162,8 +190,11 @@ export default {
 
             let loadingTask = null;
             try {
+                // pdfjs-dist の worker は pdf.worker.min.mjs だが、.mjs は Web サーバーが JavaScript として返さないことが
+                // あるため、ePortal には .js に名前を変えて置いている（eportal-saas の README）
                 GlobalWorkerOptions.workerSrc = `${assetsUrl()}pdf.worker.min.js`;
-                const data = await (await fetch(this.pdfUrl)).arrayBuffer();
+                const [response] = await Promise.all([fetch(this.pdfUrl), this.checkCMap()]);
+                const data = await response.arrayBuffer();
                 if (loadId !== this.loadId) {
                     return;
                 }
@@ -182,7 +213,7 @@ export default {
 
                 // 読み込み中に閉じたり別の PDF に変わったりしたら、この読み込みの結果は捨てる
                 if (loadId !== this.loadId) {
-                    loadingTask.destroy();
+                    loadingTask.destroy().catch(() => {});
                     return;
                 }
 
@@ -203,11 +234,26 @@ export default {
             } catch (error) {
                 if (loadId === this.loadId) {
                     console.error(error);
+                    this.errorKey = errorKeyOf(error);
                     this.status = 'error';
                 } else if (loadingTask) {
-                    loadingTask.destroy();
+                    loadingTask.destroy().catch(() => {});
                 }
             }
+        },
+
+        /**
+         * CMap が置いてあるか確かめる。無ければ例外にして、文字の抜けた PDF を表示しない
+         */
+        async checkCMap() {
+            if (cMapChecked) {
+                return;
+            }
+            const response = await fetch(`${assetsUrl()}cmaps/${CHECK_CMAP}`, { method: 'HEAD' });
+            if (!response.ok) {
+                throw new Error(`CMap not found (${response.status})`);
+            }
+            cMapChecked = true;
         },
 
         /**
@@ -218,11 +264,12 @@ export default {
             this.renderTasks.forEach((task) => task.cancel());
             this.renderTasks.clear();
             this.renderedScale.clear();
+            this.loadedPages.clear();
             if (this.observer) {
                 this.observer.disconnect();
             }
             if (this.loadingTask) {
-                this.loadingTask.destroy();
+                this.loadingTask.destroy().catch(() => {});
                 this.loadingTask = null;
             }
             this.pdfDocument = null;
@@ -269,7 +316,7 @@ export default {
          */
         setScale(scale) {
             const container = this.$refs.pages;
-            // 見ている場所がずれないよう、倍率に合わせてスクロール位置も動かす
+            // 見ている場所がおおよそ同じになるよう（縦方向のみ）、倍率に合わせてスクロール位置も動かす
             const ratio = scale / this.scale;
             const scrollTop = container.scrollTop * ratio;
 
@@ -323,6 +370,13 @@ export default {
             const canvas = box.querySelector('canvas');
             canvas.width = 0;
             canvas.height = 0;
+
+            // canvas を 0 にしても、pdf.js はページの画像と描画命令を cleanup() まで持ち続けるため、あわせて捨てる
+            // （描画の取り消しが終わっていないときは、終わったあとに pdf.js が捨てる）
+            const page = this.loadedPages.get(number);
+            if (page) {
+                page.cleanup();
+            }
         },
 
         /**
@@ -332,19 +386,29 @@ export default {
          */
         async renderPage(number, box) {
             const { pdfDocument } = this;
-            if (!pdfDocument || this.renderedScale.get(number) === this.scale) {
+            const rendered = this.renderedScale.get(number);
+            if (!pdfDocument || (rendered && rendered.scale === this.scale)) {
                 return;
             }
 
             const { scale } = this;
-            this.renderedScale.set(number, scale);
+            // この呼び出しの印。待っている間に clearPage で消えたり、次の呼び出しに替わったりしたら描かない
+            const rendering = { scale };
+            this.renderedScale.set(number, rendering);
             if (this.renderTasks.has(number)) {
                 this.renderTasks.get(number).cancel();
             }
 
             try {
                 const page = await pdfDocument.getPage(number);
-                if (pdfDocument !== this.pdfDocument || scale !== this.scale) {
+                if (pdfDocument === this.pdfDocument) {
+                    this.loadedPages.set(number, page);
+                }
+                if (
+                    pdfDocument !== this.pdfDocument ||
+                    scale !== this.scale ||
+                    this.renderedScale.get(number) !== rendering
+                ) {
                     return;
                 }
 
@@ -377,12 +441,20 @@ export default {
                 this.renderTasks.set(number, task);
                 await task.promise;
                 this.renderTasks.delete(number);
+                this.pages[number - 1].failed = false;
             } catch (error) {
                 this.renderTasks.delete(number);
                 if (error && error.name === 'RenderingCancelledException') {
                     return;
                 }
-                this.renderedScale.delete(number);
+                // 閉じたり別の PDF に変わったりして捨てた文書の失敗は無視する
+                if (pdfDocument !== this.pdfDocument) {
+                    return;
+                }
+                if (this.renderedScale.get(number) === rendering) {
+                    this.renderedScale.delete(number);
+                    this.pages[number - 1].failed = true;
+                }
                 console.error(error);
             }
         },
@@ -425,6 +497,15 @@ export default {
         canvas {
             display: block;
         }
+    }
+
+    .fm-pdf-page-error {
+        position: absolute;
+        top: 2rem;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #6c757d;
     }
 
     .fm-pdf-message {
